@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <title>Informe de Inspección - MAGNATEST</title>
+
+  <style>
+    body{
+      font-family: Arial, sans-serif;
+      background:#f5f5f5;
+      margin:0;
+      padding:1rem;
+      color:#000;
+    }
+
+    .sheet{
+      background:#fff;
+      max-width:800px;
+      margin:0 auto;
+      border:1px solid #000;
+      padding:16px 24px 40px;
+    }
+
+    h1,h2{
+      font-family: "Arial", sans-serif;
+      margin:0 0 .5rem 0;
+      font-weight:700;
+      color:#0f1a2b;
+    }
+    h1{
+      text-align:center;
+      font-size:1.2rem;
+      text-transform:uppercase;
+    }
+    h2{
+      font-size:1rem;
+      text-transform:uppercase;
+      border-bottom:1px solid #0f1a2b;
+      padding-bottom:4px;
+      margin-top:24px;
+    }
+
+    .notes-simple[contenteditable="true"],
+    .sig-underline[contenteditable="true"]{
+      outline:0;
+    }
+
+    .notes-simple{
+      min-height:80px;
+      border:1px solid #999;
+      padding:8px;
+      font-size:.9rem;
+      line-height:1.3rem;
+    }
+
+    /* Firmas */
+    .sig-table{
+      margin-top:16px;
+      border:1px solid #000;
+      padding:12px;
+      break-inside: avoid;
+    }
+
+    .sig-table table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:.9rem;
+    }
+    .sig-table td{
+      vertical-align:top;
+      padding:6px 8px;
+      border-bottom:1px solid #ddd;
+    }
+    .sig-label{
+      width:30%;
+      font-weight:bold;
+    }
+    .sig-fill .sig-underline{
+      min-height:32px;
+      border-bottom:1px solid #000;
+      font-size:.9rem;
+    }
+
+    /* Evidencias fotográficas */
+    #foto-groups{
+      display:flex;
+      flex-direction:column;
+      gap:16px;
+    }
+    .foto-group{
+      border:1px solid #999;
+      padding:8px;
+    }
+    .foto-group header{
+      font-weight:bold;
+      margin-bottom:6px;
+      font-size:.85rem;
+    }
+    .foto-list{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .foto-item{
+      width:120px;
+      border:1px solid #ccc;
+      font-size:.7rem;
+      text-align:center;
+    }
+    .foto-item img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+    .foto-caption[contenteditable="true"]{
+      border-top:1px solid #ccc;
+      min-height:32px;
+      padding:4px;
+      outline:0;
+    }
+
+    /* Botones básicos */
+    .controls{
+      max-width:800px;
+      margin:0.5rem auto 1rem;
+      display:flex;
+      flex-wrap:wrap;
+      gap:.5rem;
+      justify-content:center;
+    }
+    button{
+      font-size:.9rem;
+      padding:.5rem .75rem;
+      border-radius:4px;
+      border:1px solid #0f1a2b;
+      background:#0f1a2b;
+      color:#fff;
+    }
+
+    /* Print */
+    @media print{
+      body{
+        background:#fff;
+        margin:0;
+        padding:0;
+      }
+      .controls{ display:none; }
+      .sheet{
+        border:1px solid #000;
+        margin:0;
+        box-shadow:none;
+        page-break-after:auto;
+      }
+      .sig-table{
+        page-break-inside:avoid;
+        break-inside:avoid;
+      }
+      #foto-groups .foto-group{
+        page-break-inside:avoid;
+        break-inside:avoid;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="controls">
+    <button id="btn-add-foto-group">+ Sección Fotos</button>
+    <button id="btn-save-json">Guardar informe (.json)</button>
+    <button id="btn-load-json">Cargar informe (.json)</button>
+    <button onclick="window.print()">Generar PDF</button>
+    <input type="file" id="input-json" accept="application/json" style="display:none" />
+  </div>
+
+  <div class="sheet" id="sheet">
+
+    <header style="text-align:center; margin-bottom:16px;">
+      <h1>INFORME DE INSPECCIÓN</h1>
+      <div style="font-size:.9rem; font-weight:bold; margin-bottom:4px;">
+        PARTICULAS MAGNÉTICAS (MT)
+      </div>
+      <div style="font-size:.8rem; color:#2a364f;">
+        Proyecto / Equipo / Fecha – Complete los campos en las tablas.
+      </div>
+    </header>
+
+    <!-- Secciones superiores del informe (tablas de datos, etc.) irían aquí -->
+
+    <!-- 5 OBSERVACIONES -->
+    <section class="section" id="sec-observaciones">
+      <h2><span class="num"></span> Observaciones</h2>
+      <div class="notes-simple" contenteditable="true">
+        Anote aquí detalles generales, recomendaciones y acciones.
+      </div>
+    </section>
+
+    <!-- 6 FIRMAS -->
+    <div class="sig-table">
+      <table>
+        <tr>
+          <td class="sig-label">Nombre / Cargo</td>
+          <td class="sig-fill">
+            <div contenteditable="true" class="sig-underline">
+              Nombre completo — Cargo
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="sig-label">Fecha</td>
+          <td class="sig-fill">
+            <div contenteditable="true" class="sig-underline">
+              dd/mm/aaaa
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- 7 EVIDENCIAS FOTOGRÁFICAS -->
+    <section class="section" id="sec-fotos">
+      <h2><span class="num"></span> Evidencias Fotográficas</h2>
+      <div id="foto-groups"></div>
+    </section>
+
+  </div><!-- /sheet -->
+
+  <!-- Templates -->
+  <template id="tpl-foto-group">
+    <div class="foto-group">
+      <header contenteditable="true">Descripción sector / componente</header>
+      <div class="foto-list"></div>
+      <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;">
+        <button class="btn-add-foto">+ Fotos</button>
+      </div>
+    </div>
+  </template>
+
+  <template id="tpl-foto-item">
+    <div class="foto-item">
+      <img alt="foto evidencia"/>
+      <div class="foto-caption" contenteditable="true">Descripción / hallazgo</div>
+    </div>
+  </template>
+
+  <script>
+  // Utilidad: generar ID simple
+  function uid(){
+    return 'id-' + Math.random().toString(36).slice(2,9);
+  }
+
+  // --- Gestión de grupos de fotos ---
+  const fotoGroupsEl = document.getElementById('foto-groups');
+  const tplGroup = document.getElementById('tpl-foto-group');
+  const tplItem  = document.getElementById('tpl-foto-item');
+
+  function addFotoGroup(data){
+    const node = tplGroup.content.cloneNode(true);
+    const groupEl = node.querySelector('.foto-group');
+    const headerEl = groupEl.querySelector('header');
+    const listEl = groupEl.querySelector('.foto-list');
+    const btnAdd = groupEl.querySelector('.btn-add-foto');
+
+    groupEl.dataset.gid = data?.gid || uid();
+    if(data && data.header){
+      headerEl.innerText = data.header;
+    }
+
+    // cargar fotos existentes (si hay)
+    if(data && data.fotos){
+      data.fotos.forEach(f=>{
+        addFotoItem(listEl, f);
+      });
+    }
+
+    // botón para agregar fotos nuevas
+    btnAdd.addEventListener('click', ()=>{
+      pickImages().then(files=>{
+        files.forEach(file=>{
+          fileToDataURL(file).then(base64=>{
+            addFotoItem(listEl, {src:base64,caption:"Descripción / hallazgo"});
+          });
+        });
+      });
+    });
+
+    fotoGroupsEl.appendChild(node);
+  }
+
+  function addFotoItem(listEl, data){
+    const itemNode = tplItem.content.cloneNode(true);
+    const itemEl = itemNode.querySelector('.foto-item');
+    const imgEl  = itemNode.querySelector('img');
+    const capEl  = itemNode.querySelector('.foto-caption');
+
+    imgEl.src = data.src;
+    capEl.innerText = data.caption || "Descripción / hallazgo";
+    listEl.appendChild(itemNode);
+  }
+
+  // Selector de imágenes (cámara / galería)
+  function pickImages(){
+    return new Promise(resolve=>{
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.capture = 'environment'; // tras instalar como PWA en Android esto funciona offline
+      input.multiple = true;
+      input.onchange = ()=>{
+        resolve(Array.from(input.files||[]));
+      };
+      input.click();
+    });
+  }
+
+  function fileToDataURL(file){
+    return new Promise(res=>{
+      const reader = new FileReader();
+      reader.onload = e=>res(e.target.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // --- Guardar/Cargar en JSON local ---
+  function collectData(){
+    const data = {
+      observaciones: document.querySelector('#sec-observaciones .notes-simple').innerText.trim(),
+      firmas:{
+        nombreCargo: document.querySelector('.sig-table .sig-underline:nth-of-type(1)')?.innerText.trim() || "",
+        fecha: document.querySelector('.sig-table .sig-underline:nth-of-type(2)')?.innerText.trim() || ""
+      },
+      fotos:[]
+    };
+
+    document.querySelectorAll('.foto-group').forEach(group=>{
+      const g = {
+        gid: group.dataset.gid,
+        header: group.querySelector('header').innerText.trim(),
+        fotos:[]
+      };
+      group.querySelectorAll('.foto-item').forEach(item=>{
+        g.fotos.push({
+          src: item.querySelector('img').src,
+          caption: item.querySelector('.foto-caption').innerText.trim()
+        });
+      });
+      data.fotos.push(g);
+    });
+
+    return data;
+  }
+
+  function applyData(data){
+    // observaciones
+    document.querySelector('#sec-observaciones .notes-simple').innerText = data.observaciones || "";
+
+    // firmas
+    const sigs = document.querySelectorAll('.sig-table .sig-underline');
+    if(sigs[0]) sigs[0].innerText = data.firmas?.nombreCargo || "";
+    if(sigs[1]) sigs[1].innerText = data.firmas?.fecha || "";
+
+    // fotos
+    fotoGroupsEl.innerHTML = "";
+    (data.fotos || []).forEach(g=>{
+      addFotoGroup(g);
+    });
+  }
+
+  // descarga .json
+  function downloadJSON(obj){
+    const blob = new Blob([JSON.stringify(obj,null,2)], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'informe-magnatest.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // listeners UI
+  document.getElementById('btn-add-foto-group').addEventListener('click', ()=>{
+    addFotoGroup();
+  });
+
+  document.getElementById('btn-save-json').addEventListener('click', ()=>{
+    const datos = collectData();
+    // guarda también copia en localStorage para respaldo offline
+    try{
+      localStorage.setItem('magnatest_informe_cache', JSON.stringify(datos));
+    }catch(e){}
+    downloadJSON(datos);
+  });
+
+  const inputJson = document.getElementById('input-json');
+  document.getElementById('btn-load-json').addEventListener('click', ()=>{
+    inputJson.click();
+  });
+  inputJson.addEventListener('change', ()=>{
+    const file = inputJson.files?.[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const loaded = JSON.parse(e.target.result);
+      applyData(loaded);
+      // respaldo en localStorage
+      try{
+        localStorage.setItem('magnatest_informe_cache', JSON.stringify(loaded));
+      }catch(e){}
+    };
+    reader.readAsText(file);
+  });
+
+  // Restaurar último borrador si existe
+  (function restoreLocal(){
+    try{
+      const cached = localStorage.getItem('magnatest_informe_cache');
+      if(cached){
+        const data = JSON.parse(cached);
+        applyData(data);
+        return;
+      }
+    }catch(e){}
+    // si no había cache, al menos crear un grupo de fotos vacío
+    addFotoGroup();
+  })();
+
+  // registrar service worker para modo offline
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js');
+  }
+  </script>
+</body>
+</html>
