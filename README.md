@@ -1,0 +1,1 @@
+# magnatest-informe-pwa-v3
