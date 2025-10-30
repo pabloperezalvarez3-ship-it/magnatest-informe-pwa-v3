@@ -1,435 +1,795 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <title>Informe de Inspección - MAGNATEST</title>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<link rel="manifest" href="manifest.webmanifest"/>
+<title>Informe de Inspección - MAGNATEST</title>
 
-  <style>
-    body{
-      font-family: Arial, sans-serif;
-      background:#f5f5f5;
-      margin:0;
-      padding:1rem;
-      color:#000;
-    }
-
-    .sheet{
-      background:#fff;
-      max-width:800px;
-      margin:0 auto;
-      border:1px solid #000;
-      padding:16px 24px 40px;
-    }
-
-    h1,h2{
-      font-family: "Arial", sans-serif;
-      margin:0 0 .5rem 0;
-      font-weight:700;
-      color:#0f1a2b;
-    }
-    h1{
-      text-align:center;
-      font-size:1.2rem;
-      text-transform:uppercase;
-    }
-    h2{
-      font-size:1rem;
-      text-transform:uppercase;
-      border-bottom:1px solid #0f1a2b;
-      padding-bottom:4px;
-      margin-top:24px;
-    }
-
-    .notes-simple[contenteditable="true"],
-    .sig-underline[contenteditable="true"]{
-      outline:0;
-    }
-
-    .notes-simple{
-      min-height:80px;
-      border:1px solid #999;
-      padding:8px;
-      font-size:.9rem;
-      line-height:1.3rem;
-    }
-
-    /* Firmas */
-    .sig-table{
-      margin-top:16px;
-      border:1px solid #000;
-      padding:12px;
-      break-inside: avoid;
-    }
-
-    .sig-table table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:.9rem;
-    }
-    .sig-table td{
-      vertical-align:top;
-      padding:6px 8px;
-      border-bottom:1px solid #ddd;
-    }
-    .sig-label{
-      width:30%;
-      font-weight:bold;
-    }
-    .sig-fill .sig-underline{
-      min-height:32px;
-      border-bottom:1px solid #000;
-      font-size:.9rem;
-    }
-
-    /* Evidencias fotográficas */
-    #foto-groups{
-      display:flex;
-      flex-direction:column;
-      gap:16px;
-    }
-    .foto-group{
-      border:1px solid #999;
-      padding:8px;
-    }
-    .foto-group header{
-      font-weight:bold;
-      margin-bottom:6px;
-      font-size:.85rem;
-    }
-    .foto-list{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-    }
-    .foto-item{
-      width:120px;
-      border:1px solid #ccc;
-      font-size:.7rem;
-      text-align:center;
-    }
-    .foto-item img{
-      width:100%;
-      height:auto;
-      display:block;
-    }
-    .foto-caption[contenteditable="true"]{
-      border-top:1px solid #ccc;
-      min-height:32px;
-      padding:4px;
-      outline:0;
-    }
-
-    /* Botones básicos */
-    .controls{
-      max-width:800px;
-      margin:0.5rem auto 1rem;
-      display:flex;
-      flex-wrap:wrap;
-      gap:.5rem;
-      justify-content:center;
-    }
-    button{
-      font-size:.9rem;
-      padding:.5rem .75rem;
-      border-radius:4px;
-      border:1px solid #0f1a2b;
-      background:#0f1a2b;
-      color:#fff;
-    }
-
-    /* Print */
-    @media print{
-      body{
-        background:#fff;
-        margin:0;
-        padding:0;
-      }
-      .controls{ display:none; }
-      .sheet{
-        border:1px solid #000;
-        margin:0;
-        box-shadow:none;
-        page-break-after:auto;
-      }
-      .sig-table{
-        page-break-inside:avoid;
-        break-inside:avoid;
-      }
-      #foto-groups .foto-group{
-        page-break-inside:avoid;
-        break-inside:avoid;
-      }
-    }
-  </style>
+<style>
+:root{
+  --bg-body:#0f172a0d;
+  --bg-card:#ffffff;
+  --border-card:#c7cddc;
+  --header-bg:#233884;
+  --header-text:#ffffff;
+  --title-text:#0f1a2b;
+  --section-num-bg:#e8efff;
+  --section-num-text:#1a237e;
+  --line-color:#0f1a2b;
+  --radius-card:8px;
+  --radius-header:8px;
+  --radius-sheet:0px;
+  --sheet-border:#000;
+  --btn-bg:#0f1a2b;
+  --btn-text:#fff;
+  --btn-border:#0f1a2b;
+  --table-bg-alt:#f5f8ff;
+  --table-border:#d5d9e5;
+  --font-main: Arial, sans-serif;
+  --font-size-body:14px;
+}
+*{box-sizing:border-box;}
+body{
+  font-family:var(--font-main);
+  background:var(--bg-body);
+  color:#000;
+  margin:0;
+  padding:1rem;
+  font-size:var(--font-size-body);
+  line-height:1.4rem;
+}
+.controls{
+  max-width:900px;
+  margin:0 auto 1rem;
+  display:flex;
+  flex-wrap:wrap;
+  gap:.5rem;
+  justify-content:center;
+}
+button{
+  font-size:.9rem;
+  padding:.6rem .8rem;
+  border-radius:4px;
+  border:1px solid var(--btn-border);
+  background:var(--btn-bg);
+  color:var(--btn-text);
+}
+.sheet{
+  background:var(--bg-card);
+  max-width:900px;
+  margin:0 auto;
+  border:1px solid var(--sheet-border);
+  border-radius:var(--radius-sheet);
+  padding:24px 24px 40px;
+  box-shadow:0 10px 30px #0002;
+}
+header.main-header{
+  text-align:center;
+  margin-bottom:24px;
+}
+header.main-header h1{
+  margin:0 0 .5rem 0;
+  font-size:1.3rem;
+  font-weight:700;
+  color:var(--title-text);
+  text-transform:uppercase;
+}
+header.main-header .sub1{
+  font-weight:700;
+  color:var(--title-text);
+  font-size:1rem;
+  margin-bottom:4px;
+}
+header.main-header .sub2{
+  font-size:.9rem;
+  color:#2a364f;
+}
+/* Sección numerada */
+.section-block{
+  margin-top:24px;
+}
+.section-head{
+  display:flex;
+  align-items:center;
+  gap:.5rem;
+  font-weight:700;
+  color:var(--title-text);
+  font-size:1.1rem;
+  line-height:1.2rem;
+  margin-bottom:12px;
+}
+.section-num{
+  background:var(--section-num-bg);
+  color:var(--section-num-text);
+  font-weight:700;
+  padding:.4rem .6rem;
+  border-radius:6px;
+  font-size:1rem;
+  min-width:2rem;
+  text-align:center;
+  border:1px solid #cdd5ff;
+  box-shadow:0 2px 4px #0001;
+}
+/* Tablas tipo ficha */
+.info-card{
+  border:1px solid var(--border-card);
+  border-radius:var(--radius-card);
+  overflow:hidden;
+  font-size:.9rem;
+  max-width:900px;
+}
+.info-row{
+  display:flex;
+  border-bottom:1px solid var(--table-border);
+}
+.info-row:last-child{
+  border-bottom:none;
+}
+.info-cell{
+  flex:1;
+  padding:.75rem .9rem;
+  border-right:1px solid var(--table-border);
+  min-width:0;
+}
+.info-cell:last-child{
+  border-right:none;
+}
+.info-label{
+  font-weight:700;
+  color:#0f1a2b;
+  background:var(--table-bg-alt);
+  border-right:1px solid var(--table-border);
+  min-width:220px;
+}
+/* Tabla con cabecera azul (zonas / resultados) */
+.table-wrapper{
+  border:1px solid var(--border-card);
+  border-radius:var(--radius-card);
+  overflow:hidden;
+  font-size:.9rem;
+  max-width:900px;
+}
+.table-head{
+  background:var(--header-bg);
+  color:var(--header-text);
+  font-weight:700;
+  display:flex;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--border-card);
+}
+.table-head div{
+  flex:1;
+  padding:.75rem .9rem;
+  min-width:120px;
+  border-right:1px solid #ffffff55;
+  font-size:.9rem;
+}
+.table-head div:last-child{
+  border-right:none;
+}
+.table-row{
+  display:flex;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--table-border);
+}
+.table-row:last-child{
+  border-bottom:none;
+}
+.table-row div{
+  flex:1;
+  padding:.75rem .9rem;
+  min-width:120px;
+  border-right:1px solid var(--table-border);
+  word-break:break-word;
+}
+.table-row div:last-child{
+  border-right:none;
+}
+/* Observaciones */
+#observaciones-box{
+  border:1px solid var(--border-card);
+  background:#fff;
+  border-radius:var(--radius-card);
+  min-height:120px;
+  padding:1rem;
+  font-size:.9rem;
+  line-height:1.3rem;
+  outline:0;
+  max-width:900px;
+}
+/* Firmas */
+.sig-card{
+  border:1px solid var(--border-card);
+  border-radius:var(--radius-card);
+  padding:1rem;
+  font-size:.9rem;
+  max-width:500px;
+}
+.sig-row{
+  display:flex;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--table-border);
+  padding:.75rem .5rem;
+}
+.sig-row:last-child{
+  border-bottom:none;
+}
+.sig-label{
+  flex:1;
+  min-width:140px;
+  font-weight:700;
+  color:#0f1a2b;
+}
+.sig-value{
+  flex:2;
+  min-width:160px;
+  display:flex;
+  flex-direction:column;
+}
+.sig-line{
+  border-bottom:1px solid #0f1a2b;
+  min-height:20px;
+  outline:0;
+  font-size:.9rem;
+}
+/* Evidencias fotográficas */
+#foto-groups{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+  max-width:900px;
+}
+.foto-group{
+  border:1px solid var(--border-card);
+  border-radius:var(--radius-card);
+  padding:1rem;
+  font-size:.85rem;
+}
+.foto-group header{
+  font-weight:700;
+  color:#0f1a2b;
+  margin-bottom:.75rem;
+  outline:0;
+}
+.foto-list{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.foto-item{
+  width:140px;
+  border:1px solid var(--table-border);
+  border-radius:6px;
+  overflow:hidden;
+  box-shadow:0 2px 4px #0001;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+}
+.foto-item img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.foto-caption{
+  border-top:1px solid var(--table-border);
+  min-height:40px;
+  padding:.5rem;
+  outline:0;
+  font-size:.8rem;
+  line-height:1.2rem;
+  color:#0f1a2b;
+}
+.group-actions{
+  margin-top:12px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.group-actions button{
+  font-size:.8rem;
+  padding:.5rem .75rem;
+}
+/* Print */
+@media print{
+  body{background:#fff;padding:0;margin:0;}
+  .controls{display:none;}
+  .sheet{
+    border:1px solid #000;
+    border-radius:0;
+    margin:0;
+    box-shadow:none;
+  }
+  header.main-header{page-break-before:avoid;}
+  .section-block{page-break-inside:avoid;}
+  .sig-card{page-break-inside:avoid;}
+  #foto-groups .foto-group{page-break-inside:avoid;}
+}
+</style>
 </head>
 
 <body>
-  <div class="controls">
-    <button id="btn-add-foto-group">+ Sección Fotos</button>
-    <button id="btn-save-json">Guardar informe (.json)</button>
-    <button id="btn-load-json">Cargar informe (.json)</button>
-    <button onclick="window.print()">Generar PDF</button>
-    <input type="file" id="input-json" accept="application/json" style="display:none" />
+<div class="controls">
+  <button id="btn-print">Imprimir / Guardar PDF</button>
+  <button id="btn-add-zona">+ Zonas</button>
+  <button id="btn-add-resultado">+ Resultados</button>
+  <button id="btn-add-foto-group">+ Fotos</button>
+  <button id="btn-save-json">Guardar</button>
+  <button id="btn-load-json">Cargar</button>
+  <input type="file" id="input-json" accept="application/json" style="display:none"/>
+</div>
+
+<div class="sheet" id="sheet">
+
+  <header class="main-header">
+    <h1>INFORME DE INSPECCIÓN</h1>
+    <div class="sub1">PARTÍCULAS MAGNÉTICAS (MT)</div>
+    <div class="sub2">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
+  </header>
+
+  <!-- 1. ANTECEDENTES -->
+  <section class="section-block" id="sec-antecedentes">
+    <div class="section-head">
+      <div class="section-num">1</div>
+      <div>Antecedentes</div>
+    </div>
+
+    <div class="info-card" id="tabla-antecedentes">
+      <div class="info-row">
+        <div class="info-cell info-label">Orden de Trabajo</div>
+        <div class="info-cell" contenteditable="true">505902857/01</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Cliente</div>
+        <div class="info-cell" contenteditable="true">INTERCAMBIO O INTERNO CRC</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Modelo del Equipo</div>
+        <div class="info-cell" contenteditable="true">793S</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Nombre Componente</div>
+        <div class="info-cell" contenteditable="true">CONVERTIDOR TORQUE</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Proyecto / Obra</div>
+        <div class="info-cell" contenteditable="true">Contrato X - Planta Y</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Ubicación</div>
+        <div class="info-cell" contenteditable="true">Faena / Ciudad / Coordenadas</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Norma aplicable</div>
+        <div class="info-cell" contenteditable="true">ISO 5817</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Método (END)</div>
+        <div class="info-cell" contenteditable="true">MT – Partículas Magnéticas</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Tipo de componente</div>
+        <div class="info-cell" contenteditable="true">Soldadura</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. TECNICAS Y EQUIPOS DE INSPECCION (MT) -->
+  <section class="section-block" id="sec-tecnica">
+    <div class="section-head">
+      <div class="section-num">2</div>
+      <div>Técnicas y equipos de inspección (MT)</div>
+    </div>
+
+    <div class="info-card" id="tabla-tecnica">
+      <div class="info-row">
+        <div class="info-cell info-label">Técnica</div>
+        <div class="info-cell" contenteditable="true">Residual</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Imantación</div>
+        <div class="info-cell" contenteditable="true">Longitudinal</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Partículas magnéticas</div>
+        <div class="info-cell" contenteditable="true">Fluorescentes</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Equipo</div>
+        <div class="info-cell" contenteditable="true">Estacionario</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Corriente</div>
+        <div class="info-cell" contenteditable="true">1500 A</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Marca de equipo</div>
+        <div class="info-cell" contenteditable="true">Indicar marca</div>
+      </div>
+      <div class="info-row">
+        <div class="info-cell info-label">Modelo de equipo</div>
+        <div class="info-cell" contenteditable="true">Indicar modelo</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. ZONAS INSPECCIONADAS -->
+  <section class="section-block" id="sec-zonas">
+    <div class="section-head">
+      <div class="section-num">3</div>
+      <div>Zonas inspeccionadas</div>
+    </div>
+
+    <div class="table-wrapper" id="tabla-zonas">
+      <div class="table-head">
+        <div>Componente</div>
+        <div>Descripción</div>
+      </div>
+      <div class="table-row zona-row">
+        <div class="zona-comp" contenteditable="true">Z1</div>
+        <div class="zona-desc" contenteditable="true">Carcaza</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. RESULTADOS OBTENIDOS -->
+  <section class="section-block" id="sec-resultados">
+    <div class="section-head">
+      <div class="section-num">4</div>
+      <div>Resultados obtenidos</div>
+    </div>
+
+    <div class="table-wrapper" id="tabla-resultados">
+      <div class="table-head">
+        <div>Pieza/Zona</div>
+        <div>Sin defecto</div>
+        <div>Tipo de Defecto</div>
+        <div>Cantidad</div>
+        <div>Ubicación / Tamaño</div>
+        <div>Condición Final</div>
+      </div>
+      <div class="table-row resultado-row">
+        <div class="res-pieza" contenteditable="true">Z1</div>
+        <div class="res-sin" contenteditable="true">-</div>
+        <div class="res-tipo" contenteditable="true">FISURA</div>
+        <div class="res-cant" contenteditable="true">1</div>
+        <div class="res-ubic" contenteditable="true">VER ANEXO</div>
+        <div class="res-cond" contenteditable="true">RECHAZA</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. OBSERVACIONES -->
+  <section class="section-block" id="sec-observaciones">
+    <div class="section-head">
+      <div class="section-num">5</div>
+      <div>Observaciones</div>
+    </div>
+
+    <div id="observaciones-box" contenteditable="true">
+      Anote aquí detalles generales, recomendaciones y acciones.
+    </div>
+  </section>
+
+  <!-- 6. FIRMAS -->
+  <section class="section-block" id="sec-firmas">
+    <div class="section-head">
+      <div class="section-num">6</div>
+      <div>Nombre / Cargo – Firma</div>
+    </div>
+
+    <div class="sig-card" id="tabla-firmas">
+      <div class="sig-row">
+        <div class="sig-label">Nombre / Cargo</div>
+        <div class="sig-value">
+          <div class="sig-line" contenteditable="true">Nombre completo — Cargo</div>
+        </div>
+      </div>
+      <div class="sig-row">
+        <div class="sig-label">Fecha</div>
+        <div class="sig-value">
+          <div class="sig-line" contenteditable="true">dd/mm/aaaa</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. ANEXO FOTOGRÁFICO -->
+  <section class="section-block" id="sec-fotos">
+    <div class="section-head">
+      <div class="section-num">7</div>
+      <div>Anexo Fotográfico</div>
+    </div>
+
+    <div id="foto-groups"></div>
+  </section>
+
+</div><!-- /sheet -->
+
+<!-- templates -->
+<template id="tpl-foto-group">
+  <div class="foto-group">
+    <header contenteditable="true">Nombre del componente</header>
+    <div class="foto-list"></div>
+    <div class="group-actions">
+      <button class="btn-add-foto">Cargar fotos</button>
+    </div>
   </div>
+</template>
 
-  <div class="sheet" id="sheet">
+<template id="tpl-foto-item">
+  <div class="foto-item">
+    <img alt="foto evidencia"/>
+    <div class="foto-caption" contenteditable="true">Descripción / hallazgo</div>
+  </div>
+</template>
 
-    <header style="text-align:center; margin-bottom:16px;">
-      <h1>INFORME DE INSPECCIÓN</h1>
-      <div style="font-size:.9rem; font-weight:bold; margin-bottom:4px;">
-        PARTICULAS MAGNÉTICAS (MT)
-      </div>
-      <div style="font-size:.8rem; color:#2a364f;">
-        Proyecto / Equipo / Fecha – Complete los campos en las tablas.
-      </div>
-    </header>
+<script>
+// util id
+function uid(){ return 'id-' + Math.random().toString(36).slice(2,9); }
 
-    <!-- Secciones superiores del informe (tablas de datos, etc.) irían aquí -->
+// referencias
+const fotoGroupsEl = document.getElementById('foto-groups');
+const tplGroup = document.getElementById('tpl-foto-group');
+const tplItem  = document.getElementById('tpl-foto-item');
 
-    <!-- 5 OBSERVACIONES -->
-    <section class="section" id="sec-observaciones">
-      <h2><span class="num"></span> Observaciones</h2>
-      <div class="notes-simple" contenteditable="true">
-        Anote aquí detalles generales, recomendaciones y acciones.
-      </div>
-    </section>
+function addFotoGroup(data){
+  const node = tplGroup.content.cloneNode(true);
+  const groupEl = node.querySelector('.foto-group');
+  const listEl = node.querySelector('.foto-list');
+  const headerEl = node.querySelector('header');
+  const btnAdd = node.querySelector('.btn-add-foto');
 
-    <!-- 6 FIRMAS -->
-    <div class="sig-table">
-      <table>
-        <tr>
-          <td class="sig-label">Nombre / Cargo</td>
-          <td class="sig-fill">
-            <div contenteditable="true" class="sig-underline">
-              Nombre completo — Cargo
-            </div>
-          </td>
-        </tr>
-        <tr>
-          <td class="sig-label">Fecha</td>
-          <td class="sig-fill">
-            <div contenteditable="true" class="sig-underline">
-              dd/mm/aaaa
-            </div>
-          </td>
-        </tr>
-      </table>
-    </div>
+  groupEl.dataset.gid = data?.gid || uid();
+  if(data && data.header){ headerEl.innerText = data.header; }
 
-    <!-- 7 EVIDENCIAS FOTOGRÁFICAS -->
-    <section class="section" id="sec-fotos">
-      <h2><span class="num"></span> Evidencias Fotográficas</h2>
-      <div id="foto-groups"></div>
-    </section>
-
-  </div><!-- /sheet -->
-
-  <!-- Templates -->
-  <template id="tpl-foto-group">
-    <div class="foto-group">
-      <header contenteditable="true">Descripción sector / componente</header>
-      <div class="foto-list"></div>
-      <div style="margin-top:8px; display:flex; flex-wrap:wrap; gap:8px;">
-        <button class="btn-add-foto">+ Fotos</button>
-      </div>
-    </div>
-  </template>
-
-  <template id="tpl-foto-item">
-    <div class="foto-item">
-      <img alt="foto evidencia"/>
-      <div class="foto-caption" contenteditable="true">Descripción / hallazgo</div>
-    </div>
-  </template>
-
-  <script>
-  // Utilidad: generar ID simple
-  function uid(){
-    return 'id-' + Math.random().toString(36).slice(2,9);
+  if(data && data.fotos){
+    data.fotos.forEach(f=>addFotoItem(listEl,f));
   }
 
-  // --- Gestión de grupos de fotos ---
-  const fotoGroupsEl = document.getElementById('foto-groups');
-  const tplGroup = document.getElementById('tpl-foto-group');
-  const tplItem  = document.getElementById('tpl-foto-item');
-
-  function addFotoGroup(data){
-    const node = tplGroup.content.cloneNode(true);
-    const groupEl = node.querySelector('.foto-group');
-    const headerEl = groupEl.querySelector('header');
-    const listEl = groupEl.querySelector('.foto-list');
-    const btnAdd = groupEl.querySelector('.btn-add-foto');
-
-    groupEl.dataset.gid = data?.gid || uid();
-    if(data && data.header){
-      headerEl.innerText = data.header;
-    }
-
-    // cargar fotos existentes (si hay)
-    if(data && data.fotos){
-      data.fotos.forEach(f=>{
-        addFotoItem(listEl, f);
-      });
-    }
-
-    // botón para agregar fotos nuevas
-    btnAdd.addEventListener('click', ()=>{
-      pickImages().then(files=>{
-        files.forEach(file=>{
-          fileToDataURL(file).then(base64=>{
-            addFotoItem(listEl, {src:base64,caption:"Descripción / hallazgo"});
-          });
+  btnAdd.addEventListener('click', ()=>{
+    pickImages().then(files=>{
+      files.forEach(file=>{
+        fileToDataURL(file).then(base64=>{
+          addFotoItem(listEl,{src:base64,caption:"Descripción / hallazgo"});
         });
       });
     });
+  });
 
-    fotoGroupsEl.appendChild(node);
-  }
+  fotoGroupsEl.appendChild(node);
+}
 
-  function addFotoItem(listEl, data){
-    const itemNode = tplItem.content.cloneNode(true);
-    const itemEl = itemNode.querySelector('.foto-item');
-    const imgEl  = itemNode.querySelector('img');
-    const capEl  = itemNode.querySelector('.foto-caption');
+function addFotoItem(listEl,data){
+  const itemNode = tplItem.content.cloneNode(true);
+  const imgEl=itemNode.querySelector('img');
+  const capEl=itemNode.querySelector('.foto-caption');
+  imgEl.src=data.src;
+  capEl.innerText=data.caption||"Descripción / hallazgo";
+  listEl.appendChild(itemNode);
+}
 
-    imgEl.src = data.src;
-    capEl.innerText = data.caption || "Descripción / hallazgo";
-    listEl.appendChild(itemNode);
-  }
+function pickImages(){
+  return new Promise(resolve=>{
+    const input=document.createElement('input');
+    input.type='file';
+    input.accept='image/*';
+    input.capture='environment';
+    input.multiple=true;
+    input.onchange=()=>{ resolve(Array.from(input.files||[])); };
+    input.click();
+  });
+}
 
-  // Selector de imágenes (cámara / galería)
-  function pickImages(){
-    return new Promise(resolve=>{
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.capture = 'environment'; // tras instalar como PWA en Android esto funciona offline
-      input.multiple = true;
-      input.onchange = ()=>{
-        resolve(Array.from(input.files||[]));
-      };
-      input.click();
+function fileToDataURL(file){
+  return new Promise(res=>{
+    const reader=new FileReader();
+    reader.onload=e=>res(e.target.result);
+    reader.readAsDataURL(file);
+  });
+}
+
+// zonas dinámicas
+const zonasTable=document.getElementById('tabla-zonas');
+function addZonaRow(data){
+  const row=document.createElement('div');
+  row.className='table-row zona-row';
+  row.innerHTML=`
+    <div class="zona-comp" contenteditable="true">${data?.comp||""}</div>
+    <div class="zona-desc" contenteditable="true">${data?.desc||""}</div>
+  `;
+  zonasTable.appendChild(row);
+}
+
+// resultados dinámicos
+const resTable=document.getElementById('tabla-resultados');
+function addResultadoRow(data){
+  const row=document.createElement('div');
+  row.className='table-row resultado-row';
+  row.innerHTML=`
+    <div class="res-pieza" contenteditable="true">${data?.pieza||""}</div>
+    <div class="res-sin" contenteditable="true">${data?.sin||""}</div>
+    <div class="res-tipo" contenteditable="true">${data?.tipo||""}</div>
+    <div class="res-cant" contenteditable="true">${data?.cant||""}</div>
+    <div class="res-ubic" contenteditable="true">${data?.ubic||""}</div>
+    <div class="res-cond" contenteditable="true">${data?.cond||""}</div>
+  `;
+  resTable.appendChild(row);
+}
+
+// recopilar datos completos
+function collectData(){
+  function grabRowsInfoCard(cardEl){
+    const rows=[];
+    cardEl.querySelectorAll('.info-row').forEach(r=>{
+      const label=r.querySelector('.info-label')?.innerText.trim()||"";
+      const value=r.querySelector('.info-cell:not(.info-label)')?.innerText.trim()||"";
+      rows.push({label,value});
     });
+    return rows;
   }
 
-  function fileToDataURL(file){
-    return new Promise(res=>{
-      const reader = new FileReader();
-      reader.onload = e=>res(e.target.result);
-      reader.readAsDataURL(file);
+  const antecedentes=grabRowsInfoCard(document.getElementById('tabla-antecedentes'));
+  const tecnica=grabRowsInfoCard(document.getElementById('tabla-tecnica'));
+
+  const zonas=[];
+  document.querySelectorAll('#tabla-zonas .zona-row').forEach(r=>{
+    zonas.push({
+      comp:r.querySelector('.zona-comp')?.innerText.trim()||"",
+      desc:r.querySelector('.zona-desc')?.innerText.trim()||""
     });
-  }
+  });
 
-  // --- Guardar/Cargar en JSON local ---
-  function collectData(){
-    const data = {
-      observaciones: document.querySelector('#sec-observaciones .notes-simple').innerText.trim(),
-      firmas:{
-        nombreCargo: document.querySelector('.sig-table .sig-underline:nth-of-type(1)')?.innerText.trim() || "",
-        fecha: document.querySelector('.sig-table .sig-underline:nth-of-type(2)')?.innerText.trim() || ""
-      },
+  const resultados=[];
+  document.querySelectorAll('#tabla-resultados .resultado-row').forEach(r=>{
+    resultados.push({
+      pieza:r.querySelector('.res-pieza')?.innerText.trim()||"",
+      sin:r.querySelector('.res-sin')?.innerText.trim()||"",
+      tipo:r.querySelector('.res-tipo')?.innerText.trim()||"",
+      cant:r.querySelector('.res-cant')?.innerText.trim()||"",
+      ubic:r.querySelector('.res-ubic')?.innerText.trim()||"",
+      cond:r.querySelector('.res-cond')?.innerText.trim()||""
+    });
+  });
+
+  const observaciones=document.getElementById('observaciones-box').innerText.trim();
+
+  const sigLines=document.querySelectorAll('#tabla-firmas .sig-line');
+  const firmaNombreCargo=sigLines[0]?.innerText.trim()||"";
+  const firmaFecha=sigLines[1]?.innerText.trim()||"";
+
+  const fotos=[];
+  document.querySelectorAll('#foto-groups .foto-group').forEach(group=>{
+    const g={
+      gid:group.dataset.gid,
+      header:group.querySelector('header').innerText.trim(),
       fotos:[]
     };
-
-    document.querySelectorAll('.foto-group').forEach(group=>{
-      const g = {
-        gid: group.dataset.gid,
-        header: group.querySelector('header').innerText.trim(),
-        fotos:[]
-      };
-      group.querySelectorAll('.foto-item').forEach(item=>{
-        g.fotos.push({
-          src: item.querySelector('img').src,
-          caption: item.querySelector('.foto-caption').innerText.trim()
-        });
+    group.querySelectorAll('.foto-item').forEach(item=>{
+      g.fotos.push({
+        src:item.querySelector('img').src,
+        caption:item.querySelector('.foto-caption').innerText.trim()
       });
-      data.fotos.push(g);
     });
-
-    return data;
-  }
-
-  function applyData(data){
-    // observaciones
-    document.querySelector('#sec-observaciones .notes-simple').innerText = data.observaciones || "";
-
-    // firmas
-    const sigs = document.querySelectorAll('.sig-table .sig-underline');
-    if(sigs[0]) sigs[0].innerText = data.firmas?.nombreCargo || "";
-    if(sigs[1]) sigs[1].innerText = data.firmas?.fecha || "";
-
-    // fotos
-    fotoGroupsEl.innerHTML = "";
-    (data.fotos || []).forEach(g=>{
-      addFotoGroup(g);
-    });
-  }
-
-  // descarga .json
-  function downloadJSON(obj){
-    const blob = new Blob([JSON.stringify(obj,null,2)], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'informe-magnatest.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
-  // listeners UI
-  document.getElementById('btn-add-foto-group').addEventListener('click', ()=>{
-    addFotoGroup();
+    fotos.push(g);
   });
 
-  document.getElementById('btn-save-json').addEventListener('click', ()=>{
-    const datos = collectData();
-    // guarda también copia en localStorage para respaldo offline
-    try{
-      localStorage.setItem('magnatest_informe_cache', JSON.stringify(datos));
-    }catch(e){}
-    downloadJSON(datos);
-  });
+  return {
+    antecedentes,
+    tecnica,
+    zonas,
+    resultados,
+    observaciones,
+    firmas:{
+      nombreCargo:firmaNombreCargo,
+      fecha:firmaFecha
+    },
+    fotos
+  };
+}
 
-  const inputJson = document.getElementById('input-json');
-  document.getElementById('btn-load-json').addEventListener('click', ()=>{
-    inputJson.click();
-  });
-  inputJson.addEventListener('change', ()=>{
-    const file = inputJson.files?.[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = e=>{
-      const loaded = JSON.parse(e.target.result);
-      applyData(loaded);
-      // respaldo en localStorage
-      try{
-        localStorage.setItem('magnatest_informe_cache', JSON.stringify(loaded));
-      }catch(e){}
-    };
-    reader.readAsText(file);
-  });
-
-  // Restaurar último borrador si existe
-  (function restoreLocal(){
-    try{
-      const cached = localStorage.getItem('magnatest_informe_cache');
-      if(cached){
-        const data = JSON.parse(cached);
-        applyData(data);
-        return;
+// aplicar datos
+function applyData(data){
+  function fillRowsInfoCard(cardEl,rows){
+    const rs=cardEl.querySelectorAll('.info-row');
+    rs.forEach((r,i)=>{
+      const cell=r.querySelector('.info-cell:not(.info-label)');
+      if(cell && rows[i]){
+        cell.innerText=rows[i].value||"";
       }
-    }catch(e){}
-    // si no había cache, al menos crear un grupo de fotos vacío
-    addFotoGroup();
-  })();
-
-  // registrar service worker para modo offline
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('./sw.js');
+    });
   }
-  </script>
+
+  if(data.antecedentes) fillRowsInfoCard(document.getElementById('tabla-antecedentes'),data.antecedentes);
+  if(data.tecnica) fillRowsInfoCard(document.getElementById('tabla-tecnica'),data.tecnica);
+
+  if(data.zonas){
+    document.querySelectorAll('#tabla-zonas .zona-row').forEach(r=>r.remove());
+    data.zonas.forEach(z=>addZonaRow(z));
+  }
+
+  if(data.resultados){
+    document.querySelectorAll('#tabla-resultados .resultado-row').forEach(r=>r.remove());
+    data.resultados.forEach(res=>addResultadoRow({
+      pieza:res.pieza,
+      sin:res.sin,
+      tipo:res.tipo,
+      cant:res.cant,
+      ubic:res.ubic,
+      cond:res.cond
+    }));
+  }
+
+  if(data.observaciones){
+    document.getElementById('observaciones-box').innerText=data.observaciones;
+  }
+
+  if(data.firmas){
+    const sigLines=document.querySelectorAll('#tabla-firmas .sig-line');
+    if(sigLines[0]) sigLines[0].innerText=data.firmas.nombreCargo||"";
+    if(sigLines[1]) sigLines[1].innerText=data.firmas.fecha||"";
+  }
+
+  fotoGroupsEl.innerHTML="";
+  (data.fotos||[]).forEach(g=>{ addFotoGroup(g); });
+}
+
+// descarga json
+function downloadJSON(obj){
+  const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='informe-magnatest.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// botones
+document.getElementById('btn-print').addEventListener('click',()=>window.print());
+document.getElementById('btn-add-zona').addEventListener('click',()=>{addZonaRow({comp:"",desc:""});});
+document.getElementById('btn-add-resultado').addEventListener('click',()=>{addResultadoRow({pieza:"",sin:"",tipo:"",cant:"",ubic:"",cond:""});});
+document.getElementById('btn-add-foto-group').addEventListener('click',()=>{addFotoGroup();});
+
+document.getElementById('btn-save-json').addEventListener('click',()=>{
+  const datos=collectData();
+  try{localStorage.setItem('magnatest_informe_cache',JSON.stringify(datos));}catch(e){}
+  downloadJSON(datos);
+});
+
+const inputJson=document.getElementById('input-json');
+document.getElementById('btn-load-json').addEventListener('click',()=>{inputJson.click();});
+inputJson.addEventListener('change',()=>{
+  const file=inputJson.files?.[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const loaded=JSON.parse(e.target.result);
+    applyData(loaded);
+    try{localStorage.setItem('magnatest_informe_cache',JSON.stringify(loaded));}catch(e){}
+  };
+  reader.readAsText(file);
+});
+
+// restaurar cache local
+(function restoreLocal(){
+  try{
+    const cached=localStorage.getItem('magnatest_informe_cache');
+    if(cached){
+      const data=JSON.parse(cached);
+      applyData(data);
+      return;
+    }
+  }catch(e){}
+  addFotoGroup();
+})();
+
+// registrar service worker
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js');
+}
+</script>
 </body>
 </html>
