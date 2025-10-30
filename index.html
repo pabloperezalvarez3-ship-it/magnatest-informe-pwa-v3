@@ -1,317 +1,492 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
-<link rel="manifest" href="manifest.webmanifest"/>
-<title>Informe de Inspección - MAGNATEST</title>
-<style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Informe de Inspección</title>
+  <meta name="theme-color" content="#0b66c3" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <style>
+    :root{--a4-w:210mm;--a4-h:297mm;--ink:#111827;--border:#e5e7eb;--bg:#ffffff;--head:#204aa0;--soft:#cfe2ff}
+    html,body{height:100%}
+    body{margin:0;background:#0f172a;color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .toolbar{position:sticky;top:0;z-index:10;max-width:var(--a4-w);margin:0 auto;padding:10px 8px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;background:#0f172a}
+    .btn{border:1px solid #334155;background:#1f2937;color:#e5e7eb;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    input[type="file"]{display:none!important}
+
+    .sheet{counter-reset:sec;width:var(--a4-w);min-height:var(--a4-h);margin:12px auto 24px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.35);border-radius:10px;padding:18mm 16mm;box-sizing:border-box;position:relative}
+    .logo-wrap{position:absolute;top:6mm;left:10mm}
+    .logo{width:34mm}
+    #sec-antecedentes{margin-top:14mm}
+
+    .header{text-align:center;margin:0 auto 10mm}
+    .h-title{font-size:22px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+    .h-sub{color:#6b7280;font-size:12px}
+
+    .section{margin-bottom:9mm;break-inside:avoid;counter-increment:sec}
+    .section h2{display:flex;align-items:center;gap:10px;font-size:18px;margin:0 0 6mm 0;break-after:avoid}
+    .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;background:#e6efff;color:#113c88;font-weight:800}
+    .num::after{content:counter(sec)}
+
+    .table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+    thead th{background:var(--head);color:#fff;text-align:left;padding:10px 8px;font-weight:700}
+    tbody td{border-top:1px solid var(--border);border-right:1px solid var(--border);padding:9px 8px;vertical-align:top;background:#fff}
+    tbody td:last-child{border-right:none}
+    [contenteditable="true"]{outline:none}
+    [contenteditable="true"]:focus{box-shadow:inset 0 0 0 2px #d6e7fb;background:#f8fbff}
+
+    /* Centro de texto SOLO sección resultados */
+    #tabla-resultados tbody td{ text-align:center; }
+    #tabla-resultados tbody td:first-child{ text-align:center; } /* si prefieres izq, cambia a left */
+
+    /* Anexo: título formal y galería 2 columnas con borde tenue */
+    .group{margin:8mm 0 10mm}
+    .group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .group-name{display:inline-block;padding:8px 12px;border:1px solid var(--border);border-radius:12px;background:#eef5ff;color:#0f3e79;font-weight:700;min-width:46mm;max-width:100mm}
+    .gallery{--cols:2;--gap:10px;display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:var(--gap)}
+    .photo{position:relative;border:2px solid var(--soft);border-radius:12px;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid;cursor:grab;box-shadow:0 0 0 4px #f6f9ff inset}
+    .photo:active{cursor:grabbing}
+    .photo::before{content:"";display:block;aspect-ratio:4/3;}
+    .photo>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .drag-over{outline:3px dashed #2563eb; outline-offset:-6px}
+
+    /* Firma */
+    .sig-table { width: 70%; margin: 12mm auto 0; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .sig-table table { width:100%; border-collapse:collapse; table-layout:fixed; }
+    .sig-table td { border-top:1px solid var(--border); padding:10px; font-size:13px; vertical-align:middle; }
+    .sig-table tr:first-child td { border-top:none; }
+    .sig-label { width:38%; background:#eef5ff; font-weight:700; color:#0f3e79; }
+    .sig-fill { background:#fff; }
+    .sig-underline { border-bottom:1.5px solid #9ec3ff; height:24px; }
+
+    /* Observaciones simple */
+    .notes-simple{border:1px solid var(--border);border-radius:12px;min-height:35mm;padding:10px;background:#fff}
+
+    @page{size:A4;margin:12mm 10mm}
+    @media print{
+      .toolbar,.controls{display:none!important}
+      body{background:#fff}
+      .sheet{margin:0;box-shadow:none;border-radius:0;padding:0}
+      #sec-fotos .group + .group{break-before:page}
+      .photo{border:2px solid var(--soft);box-shadow:0 0 0 4px #f6f9ff inset} /* mantener borde tenue también en PDF */
+    }
+  
+/* === Precise logo placement for PRINT === */
 :root{
-  --bg-body:#0b1220; --bg-sheet:#ffffff; --ring:#c2c8f6; --title:#0f1a2b;
-  --accent:#233884; --table-alt:#f6f8ff; --table-border:#dbe1f2;
+  --pm-top: 8mm;
+  --pm-left: 10mm;
+  --logo-nudge-x: -2mm;
+  --logo-nudge-y: -2mm;
 }
-*{box-sizing:border-box} body{margin:0;padding:16px;background:var(--bg-body);font-family:Arial,Helvetica,sans-serif;color:#111}
-.controls{max-width:980px;margin:0 auto 16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.controls button{padding:10px 14px;border-radius:10px;border:1px solid #0f1a2b;background:#0f1a2b;color:#fff;font-weight:600}
-.sheet{max-width:980px;margin:0 auto;background:var(--bg-sheet);border-radius:18px;box-shadow:0 20px 50px #0006;padding:24px 28px 40px;border:1px solid #0002}
+@media print {
+  @page {
+    margin: var(--pm-top) 10mm 12mm var(--pm-left);
+  }
+  .report-header, header, .title-wrap { padding-top: 0 !important; margin-top: 0 !important; }
+  .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
+  .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
+}
 
-/* Header pill */
-.header-pill{border:2px solid var(--ring);border-radius:40px;padding:16px 20px;display:grid;grid-template-columns:240px 1fr 160px;gap:10px;align-items:center;margin-bottom:18px}
-.header-left img{max-width:220px;height:auto;display:block}
-.header-center{text-align:center;color:var(--title)}
-.header-center h1{margin:0;font-size:28px;font-weight:900;letter-spacing:.5px}
-.header-center .line2,.header-center .line3{font-weight:700}
-.header-center .line4{color:#2c3b6f;font-size:13px;margin-top:6px}
-.header-right{font-size:14px;color:#6b7280;display:flex;flex-direction:column;gap:14px;justify-self:end}
-.header-right .kv{display:flex;gap:10px;align-items:center}
-.header-right .v{min-width:100px;min-height:20px;border-bottom:1px solid #c8cee8;color:#111}
+</style>
 
-/* Sections */
-.section{margin-top:22px}
-.section-title{display:flex;align-items:center;gap:10px;font-weight:800;color:#1c274c;margin:0 0 12px 0;font-size:20px}
-.badge{background:#e8efff;color:#1a237e;border:1px solid #cdd5ff;border-radius:10px;padding:6px 10px;font-weight:800}
+<!-- mgt v35 css -->
+<style>
+/* Header/brand forced top-left */
+header, .header, .page-header { position: relative; }
+.brand, .app-brand, .brand-logo, .logo, .mgt-brand { position: absolute !important; top: 4px !important; left: 18px !important; z-index: 10; }
+.brand img, .app-brand img, .brand-logo img, .logo img, .mgt-brand img { height: 60px !important; width: auto !important; display:block; }
 
-/* Info cards */
-.info-card{border:1px solid var(--table-border);border-radius:14px;overflow:hidden}
-.info-row{display:flex;border-bottom:1px solid var(--table-border)}
-.info-row:last-child{border-bottom:none}
-.info-label{background:var(--table-alt);font-weight:700;min-width:260px;padding:12px 14px;border-right:1px solid var(--table-border);color:#21305e}
-.info-value{flex:1;padding:12px 14px}
-.info-value[contenteditable]{outline:0}
 
-/* Tables (zonas/resultados) */
-.table{border:1px solid var(--table-border);border-radius:14px;overflow:hidden}
-.table-head{display:flex;background:var(--accent);color:#fff;font-weight:700}
-.table-head div{flex:1;padding:12px 14px;border-right:1px solid #ffffff55}
-.table-head div:last-child{border-right:none}
-.table-row{display:flex;border-top:1px solid var(--table-border)}
-.table-row div{flex:1;padding:12px 14px;border-right:1px solid var(--table-border)}
-.table-row div:last-child{border-right:none}
-.table-row [contenteditable]{outline:0}
+@media print {
+  .sig-table{ page-break-before: always; break-inside: avoid; margin-top: 8mm; }
+}
 
-/* Observaciones */
-#observaciones{border:1px solid var(--table-border);border-radius:14px;min-height:120px;padding:12px 14px;outline:0}
 
-/* Firmas */
-.sig-card{border:1px solid var(--table-border);border-radius:14px;overflow:hidden;max-width:560px}
-.sig-row{display:flex;border-top:1px solid var(--table-border)}
-.sig-row:first-child{border-top:none}
-.sig-label{background:var(--table-alt);min-width:220px;padding:12px 14px;border-right:1px solid var(--table-border);font-weight:700;color:#21305e}
-.sig-value{flex:1;padding:12px 14px}
-.sig-line{min-height:22px;border-bottom:1px solid #0f1a2b;outline:0}
+/* === Logo bien esquinado en pantalla e impresión === */
+:root{ --page-margin: 10mm; --logo-nudge-y: -1mm; --logo-nudge-x: -1mm; }
+@media print {
+  @page { margin: var(--page-margin); }
+  .report-header, header, .title-wrap{ padding-top:0 !important; margin-top:0 !important; }
+  .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
+}
 
-/* Fotos */
-#foto-groups{display:flex;flex-direction:column;gap:16px}
-.foto-group{border:1px solid var(--table-border);border-radius:14px;padding:12px 14px}
-.foto-group header{font-weight:700;color:#21305e;outline:0;margin-bottom:8px}
-.foto-list{display:flex;flex-wrap:wrap;gap:12px}
-.foto-item{width:150px;border:1px solid var(--table-border);border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 2px 4px #0001}
-.foto-item img{width:100%;height:auto;display:block}
-.foto-caption{border-top:1px solid var(--table-border);min-height:38px;padding:6px 8px;outline:0;font-size:13px}
-.group-actions{display:flex;gap:10px;margin-top:8px}
-.group-actions button{padding:8px 12px;font-size:13px}
+/* Center report title block */
+.report-title, h1.report-title, .title-main { text-align: center; margin: 0; padding-top: 6px; }
 
-/* Print */
+/* Photo tiles: add light border + delete button */
+.mgt-photo, .mgt-photo-card, .photo, .photo-card, .gallery-item, .evidence-photo, .evidence .item, figure.photo {
+  position: relative; border-radius: 14px; overflow: hidden; outline: 1.5px solid rgba(60,110,200,.25);
+}
+.mgt-remove { position:absolute; top:8px; right:8px; border:1px solid #cfe0ff; background:#fff; color:#1f3a93;
+  font-size: .8rem; line-height:1; padding:4px 8px; border-radius:10px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.mgt-remove:hover{ background:#eef3ff; }
+
 @media print{
-  body{background:#fff;padding:0}
-  .controls{display:none}
-  .sheet{border:1px solid #000;border-radius:0;margin:0;box-shadow:none}
-  .header-pill{page-break-before:avoid}
-  .section,.sig-card,.foto-group{page-break-inside:avoid}
+  .mgt-remove{ display:none !important; }
+  .brand, .app-brand, .brand-logo, .logo, .mgt-brand { top: 0 !important; left: 0 !important; }
+  .report-title, h1.report-title, .title-main { padding-top: 0; }
+}
+
+/* === Precise logo placement for PRINT === */
+:root{
+  --pm-top: 8mm;
+  --pm-left: 10mm;
+  --logo-nudge-x: -2mm;
+  --logo-nudge-y: -2mm;
+}
+@media print {
+  @page {
+    margin: var(--pm-top) 10mm 12mm var(--pm-left);
+  }
+  .report-header, header, .title-wrap { padding-top: 0 !important; margin-top: 0 !important; }
+  .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
+  .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
+}
+
+</style>
+
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+
+<style id="mgt-fixes-v8">
+:root{
+  --mgt-page-margin: 10mm;   /* margen PDF */
+  --mgt-logo-size: 15mm;     /* altura del logo */
+  --mgt-logo-nudge-y: -12mm; /* ajuste vertical (negativo = subir) */
+  --mgt-logo-nudge-x: -6mm;   /* NUEVO: horizontal; negativo = más a la izquierda */
+  --mgt-content-top-pad: 0mm;/* si ves superposición, aumenta un poco (p.ej., 2mm) */
+  --mgt-content-top-pad: 7mm;   /* o 3–4mm si lo quieres más abajo */
+}
+@media print {
+    header .subtitle { display: none !important; }
+}
+  @page { size:A4; margin: var(--mgt-page-margin); }
+  /* Fijar el MISMO logo del header */
+  .logo-wrap, .brand{
+    position: absolute !important;
+    top:  calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-y)) !important;
+    left: calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-x)) !important; /* <-- aquí */
+    z-index: 9999 !important;
+  }
+  .logo-wrap img, .brand img{
+    height: var(--mgt-logo-size) !important;
+    width: auto !important;
+    display: block !important;
+  }
+  /* Limpieza */
+  html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+  header, .header, .sheet, .page, main, #app, .container {
+    box-shadow:none !important; border:none !important;
+    padding-top: var(--mgt-content-top-pad) !important;
+    margin-top: 0 !important;
+  }
+  /* Asegurar que no exista un logo extra por estilos previos */
+  body::before{ content:none !important; }
 }
 </style>
+
+
+  <!-- PWA / iOS meta -->
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="MAGNATEST">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#244A9C">
+  <style id="mgt-app-theme">
+  :root{
+    --mgt-app-bg: #244A9C;
+    --mgt-page-bg: #ffffff;
+  }
+  @media screen, (display-mode: standalone){
+    body{ background: var(--mgt-app-bg); }
+    .sheet, .page, .content, .container{ background: var(--mgt-page-bg) !important; }
+  }
+  @media print{
+    body{ background: #fff !important; }
+  }
+  </style>
+
 </head>
 <body>
-<div class="controls">
-  <button id="btnPrint">Imprimir / Guardar PDF</button>
-  <button id="btnZona">+ Zonas</button>
-  <button id="btnRes">+ Resultados</button>
-  <button id="btnFotos">+ Fotos</button>
-  <button id="btnSave">Guardar</button>
-  <button id="btnLoad">Cargar</button>
-  <input type="file" id="fileJson" accept="application/json" style="display:none"/>
-</div>
-
-<div class="sheet">
-  <!-- Header -->
-  <div class="header-pill">
-    <div class="header-left"><img src="assets/logo.png" alt="logo"/></div>
-    <div class="header-center">
-      <h1>INFORME DE INSPECCIÓN</h1>
-      <div class="line2">ENSAYOS NO DESTRUCTIVOS</div>
-      <div class="line3">PARTÍCULAS MAGNÉTICAS (MT)</div>
-      <div class="line4">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
-    </div>
-    <div class="header-right">
-      <div class="kv"><div>fecha</div><div class="v" id="hdr-fecha" contenteditable="true"></div></div>
-      <div class="kv"><div>n°</div><div class="v" id="hdr-nro" contenteditable="true"></div></div>
-    </div>
+  <div class="toolbar">
+    <button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+    <button class="btn" id="btnAddZonas">+ Zonas</button>
+    <button class="btn" id="btnAddResultados">+ Resultados</button>
+    <button class="btn" id="btnAddFotos">+ Fotos</button>
+    <button class="btn" id="btnSave">Guardar</button>
+    <button class="btn" id="btnLoad">Cargar</button>
+    <input type="file" id="fileLoader" accept="application/json" />
   </div>
 
-  <!-- 1 Antecedentes -->
-  <section class="section" id="sec-1">
-    <div class="section-title"><span class="badge">1</span><span>Antecedentes</span></div>
-    <div class="info-card" id="tabla-antecedentes">
-      <div class="info-row"><div class="info-label">Orden de Trabajo</div><div class="info-value" contenteditable="true">505902857/01</div></div>
-      <div class="info-row"><div class="info-label">Cliente</div><div class="info-value" contenteditable="true">INTERCAMBIO O INTERNO CRC</div></div>
-      <div class="info-row"><div class="info-label">Modelo del Equipo</div><div class="info-value" contenteditable="true">793S</div></div>
-      <div class="info-row"><div class="info-label">Nombre Componente</div><div class="info-value" contenteditable="true">CONVERTIDOR TORQUE</div></div>
-      <div class="info-row"><div class="info-label">Proyecto / Obra</div><div class="info-value" contenteditable="true">Contrato X - Planta Y</div></div>
-      <div class="info-row"><div class="info-label">Ubicación</div><div class="info-value" contenteditable="true">Faena / Ciudad / Coordenadas</div></div>
-      <div class="info-row"><div class="info-label">Norma aplicable</div><div class="info-value" contenteditable="true">ISO 5817</div></div>
-      <div class="info-row"><div class="info-label">Método (END)</div><div class="info-value" contenteditable="true">MT – Partículas Magnéticas</div></div>
-      <div class="info-row"><div class="info-label">Tipo de componente</div><div class="info-value" contenteditable="true">Soldadura</div></div>
-    </div>
-  </section>
+  <div class="sheet" id="sheet">
+    <div class="logo-wrap"><img class="logo" src="icons/logo-magnatest.png" alt="MAGNATEST" /></div>
+    <header class="header">
+      <div class="h-title">INFORME DE INSPECCIÓN</div>
+      <div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
+    </header>
 
-  <!-- 2 Técnicas y equipos de inspección (MT) -->
-  <section class="section" id="sec-2">
-    <div class="section-title"><span class="badge">2</span><span>Técnicas y equipos de inspección (MT)</span></div>
-    <div class="info-card" id="tabla-tecnica">
-      <div class="info-row"><div class="info-label">Técnica</div><div class="info-value" contenteditable="true">Residual</div></div>
-      <div class="info-row"><div class="info-label">Imantación</div><div class="info-value" contenteditable="true">Longitudinal</div></div>
-      <div class="info-row"><div class="info-label">Partículas magnéticas</div><div class="info-value" contenteditable="true">Fluorescentes</div></div>
-      <div class="info-row"><div class="info-label">Equipo</div><div class="info-value" contenteditable="true">Estacionario</div></div>
-      <div class="info-row"><div class="info-label">Corriente</div><div class="info-value" contenteditable="true">1500 A</div></div>
-      <div class="info-row"><div class="info-label">Marca de equipo</div><div class="info-value" contenteditable="true">Indicar marca</div></div>
-      <div class="info-row"><div class="info-label">Modelo de equipo</div><div class="info-value" contenteditable="true">Indicar modelo</div></div>
-    </div>
-  </section>
-
-  <!-- 3 Zonas inspeccionadas -->
-  <section class="section" id="sec-3">
-    <div class="section-title"><span class="badge">3</span><span>Zonas inspeccionadas</span></div>
-    <div class="table" id="tabla-zonas">
-      <div class="table-head"><div>Componente</div><div>Descripción</div></div>
-      <div class="table-row zona-row"><div class="zona-comp" contenteditable="true">Z1</div><div class="zona-desc" contenteditable="true">Carcaza</div></div>
-    </div>
-  </section>
-
-  <!-- 4 Resultados obtenidos -->
-  <section class="section" id="sec-4">
-    <div class="section-title"><span class="badge">4</span><span>Resultados obtenidos</span></div>
-    <div class="table" id="tabla-resultados">
-      <div class="table-head"><div>Pieza/Zona</div><div>Sin defecto</div><div>Tipo de Defecto</div><div>Cantidad</div><div>Ubicación / Tamaño</div><div>Condición Final</div></div>
-      <div class="table-row resultado-row">
-        <div class="res-pieza" contenteditable="true">Z1</div>
-        <div class="res-sin" contenteditable="true">-</div>
-        <div class="res-tipo" contenteditable="true">FISURA</div>
-        <div class="res-cant" contenteditable="true">1</div>
-        <div class="res-ubic" contenteditable="true">VER ANEXO</div>
-        <div class="res-cond" contenteditable="true">RECHAZA</div>
+    <!-- 1 -->
+    <section class="section" id="sec-antecedentes">
+      <h2><span class="num"></span> Antecedentes</h2>
+      <div class="table-wrap">
+        <table><tbody>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Orden de Trabajo</td><td contenteditable="true">505902857/01</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Cliente</td><td contenteditable="true">INTERCAMBIO O INTERNO CRC</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Modelo del Equipo</td><td contenteditable="true">79S3</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Nombre Componente</td><td contenteditable="true">CONVERTIDOR TORQUE</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Proyecto / Obra</td><td contenteditable="true">Contrato X - Planta Y</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Ubicación</td><td contenteditable="true">Faena / Ciudad / Coordenadas</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Norma aplicable</td><td contenteditable="true">ISO 5817</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Método (END)</td><td contenteditable="true">MT – Partículas Magnéticas</td></tr>
+          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Tipo de componente</td><td contenteditable="true">Soldadura</td></tr>
+        </tbody></table>
       </div>
+    </section>
+
+    <!-- 2 -->
+    <section class="section" id="sec-tecnica">
+      <h2><span class="num"></span> Técnica de Inspección (MT)</h2>
+      <div class="table-wrap"><table><tbody>
+        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Técnica</td><td contenteditable="true">Residual</td></tr>
+        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Imantación</td><td contenteditable="true">Longitudinal</td></tr>
+        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Partículas magnéticas</td><td contenteditable="true">Fluorescentes</td></tr>
+        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Equipo</td><td contenteditable="true">Estacionario</td></tr>
+        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Corriente</td><td contenteditable="true">1500 A</td></tr>
+      </tbody></table></div>
+    </section>
+
+    <!-- 3 -->
+    <section class="section" id="sec-zonas">
+      <h2><span class="num"></span> Zonas inspeccionadas</h2>
+      <div class="table-wrap"><table id="tabla-zonas">
+        <thead><tr><th>Componente</th><th>Descripción</th></tr></thead>
+        <tbody><tr><td contenteditable="true">Z1</td><td contenteditable="true">Carcaza</td></tr></tbody>
+      </table></div>
+    </section>
+
+    <!-- 4 -->
+    <section class="section" id="sec-resultados">
+      <h2><span class="num"></span> Resultados obtenidos</h2>
+      <div class="table-wrap"><table id="tabla-resultados">
+        <thead><tr>
+          <th>Pieza/Zona</th><th>Sin defecto</th><th>Tipo de Defecto</th>
+          <th>Cantidad</th><th>Ubicación / Tamaño</th><th>Condición Final</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td contenteditable="true">Z1</td><td contenteditable="true">-</td>
+            <td contenteditable="true">FISURA</td><td contenteditable="true">1</td>
+            <td contenteditable="true">VER ANEXO</td><td contenteditable="true">RECHAZA</td>
+          </tr>
+        </tbody></table></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="section" id="sec-observaciones">
+      <h2><span class="num"></span> Observaciones</h2>
+      <div class="notes-simple" contenteditable="true">Anote aquí detalles generales, recomendaciones y acciones.</div>
+    </section>
+
+    <!-- 6 -->
+    <section class="section" id="sec-fotos">
+      <h2><span class="num"></span> Anexo Fotográfico</h2>
+      <div id="foto-groups"></div>
+    </section>
+
+    <!-- Firma final -->
+    <div class="sig-table">
+      <table>
+        <tr><td class="sig-label">Nombre / Cargo</td><td class="sig-fill"><div contenteditable="true" class="sig-underline">Nombre completo — Cargo</div></td></tr>
+        <tr><td class="sig-label">Fecha</td><td class="sig-fill"><div contenteditable="true" class="sig-underline">dd/mm/aaaa</div></td></tr>
+      </table>
     </div>
-  </section>
+  </div>
 
-  <!-- 5 Observaciones -->
-  <section class="section" id="sec-5">
-    <div class="section-title"><span class="badge">5</span><span>Observaciones</span></div>
-    <div id="observaciones" contenteditable="true">Anote aquí detalles generales, recomendaciones y acciones.</div>
-  </section>
-
-  <!-- 6 Firmas -->
-  <section class="section" id="sec-6">
-    <div class="section-title"><span class="badge">6</span><span>Nombre / Cargo – Firma</span></div>
-    <div class="sig-card" id="tabla-firmas">
-      <div class="sig-row"><div class="sig-label">Nombre / Cargo</div><div class="sig-value"><div class="sig-line" contenteditable="true">Nombre completo — Cargo</div></div></div>
-      <div class="sig-row"><div class="sig-label">Fecha</div><div class="sig-value"><div class="sig-line" contenteditable="true">dd/mm/aaaa</div></div></div>
+  <template id="tpl-foto-group">
+    <div class="group">
+      <div class="group-head">
+        <div class="group-name" contenteditable="true">Nombre del componente</div>
+        <div class="controls">
+          <button type="button" class="btnPick">Cargar fotos</button>
+          <input class="picker" type="file" accept="image/*" multiple capture="environment" />
+        </div>
+      </div>
+      <div class="gallery" style="--cols:2"></div>
     </div>
-  </section>
+  </template>
 
-  <!-- 7 Anexo Fotográfico -->
-  <section class="section" id="sec-7">
-    <div class="section-title"><span class="badge">7</span><span>Anexo Fotográfico</span></div>
-    <div id="foto-groups"></div>
-  </section>
-</div>
+  <script>
+    // Fotos (drag & drop para ordenar)
+    const groupsWrap=document.getElementById('foto-groups');
+    const tplGroup=document.getElementById('tpl-foto-group');
 
-<!-- Templates -->
-<template id="tpl-foto-group">
-  <div class="foto-group">
-    <header contenteditable="true">Nombre del componente</header>
-    <div class="foto-list"></div>
-    <div class="group-actions"><button class="btn-add-foto">Cargar fotos</button></div>
-  </div>
-</template>
+    function enableDnD(card){
+      card.setAttribute('draggable','true');
+      card.addEventListener('dragstart', (e)=>{
+        e.dataTransfer.setData('text/plain','drag');
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', ()=> card.classList.remove('dragging'));
+    }
+    function bindGallery(gallery){
+      let overCard=null;
+      gallery.addEventListener('dragover', (e)=>{
+        e.preventDefault();
+        const dragging = gallery.querySelector('.dragging');
+        const cards = [...gallery.querySelectorAll('.photo:not(.dragging)')];
+        let nearest=null, minDist=1e9;
+        cards.forEach(c=>{
+          const r=c.getBoundingClientRect();
+          const cx=r.left+r.width/2, cy=r.top+r.height/2;
+          const d=(e.clientX-cx)**2 + (e.clientY-cy)**2;
+          if(d<minDist){minDist=d; nearest=c;}
+        });
+        cards.forEach(c=>c.classList.remove('drag-over'));
+        if(nearest){ nearest.classList.add('drag-over'); overCard=nearest; }
+      });
+      gallery.addEventListener('dragleave', ()=>{
+        gallery.querySelectorAll('.drag-over').forEach(c=>c.classList.remove('drag-over'));
+      });
+      gallery.addEventListener('drop', (e)=>{
+        e.preventDefault();
+        const dragging = gallery.querySelector('.dragging');
+        if(!dragging) return;
+        if(overCard){
+          gallery.insertBefore(dragging, overCard);
+          overCard.classList.remove('drag-over');
+          overCard=null;
+        } else {
+          gallery.appendChild(dragging);
+        }
+      });
+    }
 
-<template id="tpl-foto-item">
-  <div class="foto-item">
-    <img alt="foto evidencia"/>
-    <div class="foto-caption" contenteditable="true">Descripción / hallazgo</div>
-  </div>
-</template>
+    function bindGroup(group){
+      const gallery=group.querySelector('.gallery');
+      bindGallery(gallery);
+      const picker=group.querySelector('.picker');
+      group.querySelector('.btnPick').addEventListener('click',()=>picker.click());
+      const onFiles=(files)=>{
+        Array.from(files).forEach(file=>{
+          const r=new FileReader();
+          r.onload=e=>{
+            const card=document.createElement('div'); card.className='photo';
+            const img=document.createElement('img'); img.alt='foto'; img.src=e.target.result;
+            card.appendChild(img); enableDnD(card); gallery.appendChild(card);
+          };
+          r.readAsDataURL(file);
+        });
+      };
+      picker.addEventListener('change',(ev)=>{ onFiles(ev.target.files); ev.target.value=''; });
+    }
+    function addFotoGroup(){ const g=tplGroup.content.firstElementChild.cloneNode(true); groupsWrap.appendChild(g); bindGroup(g); }
+    addFotoGroup();
+    document.getElementById('btnAddFotos').addEventListener('click', addFotoGroup);
 
+    // +Zonas y +Resultados
+    function addZonaRow(){
+      const tbody=document.querySelector('#tabla-zonas tbody');
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td contenteditable="true"></td><td contenteditable="true"></td>';
+      tbody.appendChild(tr);
+    }
+    function addResultadoRow(){
+      const tbody=document.querySelector('#tabla-resultados tbody');
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>';
+      tbody.appendChild(tr);
+    }
+    document.getElementById('btnAddZonas').addEventListener('click', addZonaRow);
+    document.getElementById('btnAddResultados').addEventListener('click', addResultadoRow);
+
+    // Guardar / Cargar
+    const sheet=document.getElementById('sheet');
+    const btnSave=document.getElementById('btnSave'), btnLoad=document.getElementById('btnLoad'), fileLoader=document.getElementById('fileLoader');
+    function getState(){ return {version:'sections-final-v31', saved_at:new Date().toISOString(), html:sheet.innerHTML}; }
+    function download(name,text){ const blob=new Blob([text],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; a.click(); URL.revokeObjectURL(url); }
+    function saveToFile(){ const s=getState(); const stamp=new Date().toISOString().replace(/[:.]/g,'-').slice(0,19); download('informe_magnatest_'+stamp+'.mgt.json', JSON.stringify(s)); }
+    function restoreState(s){ if(!s||!s.html) return; sheet.innerHTML=s.html;
+      // rebind galleries for drag & drop
+      sheet.querySelectorAll('#sec-fotos .gallery').forEach(bindGallery);
+      sheet.querySelectorAll('#sec-fotos .photo').forEach(enableDnD);
+      // re-enlazar botones
+      document.getElementById('btnAddFotos').addEventListener('click', addFotoGroup);
+      document.getElementById('btnAddZonas').addEventListener('click', addZonaRow);
+      document.getElementById('btnAddResultados').addEventListener('click', addResultadoRow);
+    }
+    btnSave.addEventListener('click',saveToFile);
+    btnLoad.addEventListener('click',()=>fileLoader.click());
+    fileLoader.addEventListener('change',(ev)=>{ const f=ev.target.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=e=>{ try{ restoreState(JSON.parse(e.target.result)); }catch(err){ alert('Archivo inválido'); } };
+      r.readAsText(f); ev.target.value=''; });
+  </script>
+
+<!-- mgt v35 js -->
 <script>
-function uid(){return 'id-'+Math.random().toString(36).slice(2,9);}
-
-// Controls
-btnPrint.onclick=()=>window.print();
-btnZona.onclick=()=>addZonaRow({});
-btnRes.onclick=()=>addResultadoRow({});
-btnFotos.onclick=()=>addFotoGroup({});
-btnSave.onclick=()=>{const d=collectData();try{localStorage.setItem('magnatest_cache',JSON.stringify(d));}catch(e){} downloadJSON(d);};
-btnLoad.onclick=()=>fileJson.click();
-fileJson.onchange=()=>{const f=fileJson.files&&fileJson.files[0]; if(!f) return; const r=new FileReader(); r.onload=e=>{const d=JSON.parse(e.target.result); applyData(d); try{localStorage.setItem('magnatest_cache',JSON.stringify(d));}catch(e){}}; r.readAsText(f);};
-
-// Dynamic rows
-function addZonaRow(d){
-  const row=document.createElement('div');
-  row.className='table-row zona-row';
-  row.innerHTML='<div class="zona-comp" contenteditable="true">'+(d.comp||'')+'</div><div class="zona-desc" contenteditable="true">'+(d.desc||'')+'</div>';
-  document.getElementById('tabla-zonas').appendChild(row);
-}
-function addResultadoRow(d){
-  const row=document.createElement('div');
-  row.className='table-row resultado-row';
-  row.innerHTML=[
-    '<div class="res-pieza" contenteditable="true">'+(d.pieza||'')+'</div>',
-    '<div class="res-sin" contenteditable="true">'+(d.sin||'')+'</div>',
-    '<div class="res-tipo" contenteditable="true">'+(d.tipo||'')+'</div>',
-    '<div class="res-cant" contenteditable="true">'+(d.cant||'')+'</div>',
-    '<div class="res-ubic" contenteditable="true">'+(d.ubic||'')+'</div>',
-    '<div class="res-cond" contenteditable="true">'+(d.cond||'')+'</div>'
-  ].join('');
-  document.getElementById('tabla-resultados').appendChild(row);
-}
-
-// Photos
-const fotoGroupsEl = document.getElementById('foto-groups');
-const tplGroup = document.getElementById('tpl-foto-group');
-const tplItem  = document.getElementById('tpl-foto-item');
-
-function addFotoGroup(data){
-  const node=tplGroup.content.cloneNode(true);
-  const grp=node.querySelector('.foto-group');
-  const list=node.querySelector('.foto-list');
-  const header=node.querySelector('header');
-  const btn=node.querySelector('.btn-add-foto');
-  grp.dataset.gid=data&&data.gid||uid();
-  if(data&&data.header) header.innerText=data.header;
-  (data&&data.fotos||[]).forEach(f=>addFotoItem(list,f));
-  btn.onclick=()=>{pickImages().then(files=>{files.forEach(fl=>{fileToDataURL(fl).then(b64=>addFotoItem(list,{src:b64,caption:'Descripción / hallazgo'}));});});};
-  fotoGroupsEl.appendChild(node);
-}
-function addFotoItem(list,data){
-  const n=tplItem.content.cloneNode(true);
-  n.querySelector('img').src=data.src;
-  n.querySelector('.foto-caption').innerText=data.caption||'Descripción / hallazgo';
-  list.appendChild(n);
-}
-function pickImages(){
-  return new Promise(res=>{
-    const i=document.createElement('input');
-    i.type='file'; i.accept='image/*'; i.capture='environment'; i.multiple=true;
-    i.onchange=()=>res(Array.from(i.files||[]));
-    i.click();
+(function(){
+  function qualifyPhotoCard(node){
+    if (!node) return null;
+    // base element to decorate is the first ancestor that holds the img
+    var card = node.closest('.mgt-photo, .mgt-photo-card, .photo-card, .photo, .gallery-item, .evidence-photo, .evidence .item, figure');
+    if (!card) card = node.parentElement;
+    if (!card) return null;
+    card.classList.add('mgt-photo-card');
+    if (!card.querySelector('.mgt-remove')){
+      var b = document.createElement('button');
+      b.className = 'mgt-remove'; b.textContent = '🗑';
+      b.title = 'Eliminar';
+      card.appendChild(b);
+    }
+    return card;
+  }
+  function decorateAll(){
+    document.querySelectorAll('img').forEach(function(img){
+      // solo evidencias: ignora el logo y otros iconos
+      var src = img.getAttribute('src')||'';
+      if (/logo|icon|magnatest|mgt/i.test(src)) return;
+      qualifyPhotoCard(img);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.mgt-remove'); if(!btn) return;
+    var card = btn.closest('.mgt-photo-card'); if(!card) return;
+    // intenta identificar sección/ID si existen
+    var section = card.closest('[data-section-id]'); 
+    var img = card.querySelector('img');
+    var src = img ? img.currentSrc || img.src : '';
+    card.remove();
+    try{
+      var st = (window.MGT_STATE = JSON.parse(localStorage.getItem('mgt_state')||'{}'));
+      // Limpieza aproximada: elimina por src
+      if(st.photosBySection){
+        Object.keys(st.photosBySection).forEach(function(k){
+          st.photosBySection[k] = (st.photosBySection[k]||[]).filter(function(p){
+            return (p && p.src) ? p.src !== src : true;
+          });
+        });
+      }
+      localStorage.setItem('mgt_state', JSON.stringify(st));
+    }catch(err){ console.warn('No se pudo sincronizar la eliminación en storage:', err); }
   });
-}
-function fileToDataURL(file){return new Promise(r=>{const fr=new FileReader(); fr.onload=e=>r(e.target.result); fr.readAsDataURL(file);});}
-
-// Save/Load helpers
-function grabInfoRows(cardId){
-  const out=[]; document.getElementById(cardId).querySelectorAll('.info-row').forEach(r=>{
-    out.push({label:r.querySelector('.info-label').innerText.trim(), value:r.querySelector('.info-value').innerText.trim()});
-  }); return out;
-}
-function collectData(){
-  const antecedentes = grabInfoRows('tabla-antecedentes');
-  const tecnica      = grabInfoRows('tabla-tecnica');
-  const zonas=[]; document.querySelectorAll('#tabla-zonas .zona-row').forEach(r=>zonas.push({comp:r.children[0].innerText.trim(),desc:r.children[1].innerText.trim()}));
-  const resultados=[]; document.querySelectorAll('#tabla-resultados .resultado-row').forEach(r=>resultados.push({pieza:r.children[0].innerText.trim(),sin:r.children[1].innerText.trim(),tipo:r.children[2].innerText.trim(),cant:r.children[3].innerText.trim(),ubic:r.children[4].innerText.trim(),cond:r.children[5].innerText.trim()}));
-  const observaciones = document.getElementById('observaciones').innerText.trim();
-  const firmas = {
-    nombreCargo: document.querySelector('#tabla-firmas .sig-line').innerText.trim(),
-    fecha: document.querySelector('#tabla-firmas .sig-row:nth-child(2) .sig-line').innerText.trim()
-  };
-  const hdr = {fecha:document.getElementById('hdr-fecha').innerText.trim(), nro:document.getElementById('hdr-nro').innerText.trim()};
-  const fotos=[]; document.querySelectorAll('#foto-groups .foto-group').forEach(g=>{
-    const gg={gid:g.dataset.gid, header:g.querySelector('header').innerText.trim(), fotos:[]};
-    g.querySelectorAll('.foto-item').forEach(it=>gg.fotos.push({src:it.querySelector('img').src, caption:it.querySelector('.foto-caption').innerText.trim()}));
-    fotos.push(gg);
+  // Bootstrap + observar cambios (cuando se agregan fotos nuevas)
+  document.addEventListener('DOMContentLoaded', function(){
+    decorateAll();
+    var mo = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes && m.addedNodes.forEach(function(n){
+          if (n.nodeType === 1){
+            if (n.matches('img')) qualifyPhotoCard(n);
+            n.querySelectorAll && n.querySelectorAll('img').forEach(qualifyPhotoCard);
+          }
+        });
+      });
+    });
+    mo.observe(document.body, {childList:true, subtree:true});
+    window.mgtRefreshPhotoButtons = decorateAll;
   });
-  return {hdr, antecedentes, tecnica, zonas, resultados, observaciones, firmas, fotos};
-}
-function applyData(d){
-  function setInfoRows(cardId, rows){const rs=document.getElementById(cardId).querySelectorAll('.info-row'); rs.forEach((r,i)=>{if(rows[i]) r.querySelector('.info-value').innerText = rows[i].value || '';});}
-  if(d.hdr){document.getElementById('hdr-fecha').innerText=d.hdr.fecha||''; document.getElementById('hdr-nro').innerText=d.hdr.nro||'';}
-  if(d.antecedentes) setInfoRows('tabla-antecedentes', d.antecedentes);
-  if(d.tecnica)      setInfoRows('tabla-tecnica', d.tecnica);
-  document.querySelectorAll('#tabla-zonas .zona-row').forEach(x=>x.remove()); (d.zonas||[]).forEach(z=>addZonaRow(z));
-  document.querySelectorAll('#tabla-resultados .resultado-row').forEach(x=>x.remove()); (d.resultados||[]).forEach(r=>addResultadoRow(r));
-  if(d.observaciones) document.getElementById('observaciones').innerText = d.observaciones;
-  if(d.firmas){ document.querySelector('#tabla-firmas .sig-line').innerText = d.firmas.nombreCargo || ''; document.querySelector('#tabla-firmas .sig-row:nth-child(2) .sig-line').innerText = d.firmas.fecha || ''; }
-  fotoGroupsEl.innerHTML=''; (d.fotos||[]).forEach(g=>addFotoGroup(g));
-}
-function downloadJSON(obj){const blob=new Blob([JSON.stringify(obj,null,2)],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='informe-magnatest.json'; a.click(); URL.revokeObjectURL(url);}
-
-// Restore cache
-(function init(){
-  try{const c=localStorage.getItem('magnatest_cache'); if(c){applyData(JSON.parse(c)); return;}}catch(e){}
-  addFotoGroup({});
 })();
-
-// Register SW
-if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js'); }
 </script>
+
 </body>
 </html>
