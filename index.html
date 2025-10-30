@@ -149,63 +149,31 @@ header, .header, .page-header { position: relative; }
 
 <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 
-<style id="mgt-fixes-v8">
+<style id="mgt-fixes-v7">
 :root{
-  --mgt-page-margin: 10mm;   /* margen PDF */
-  --mgt-logo-size: 15mm;     /* altura del logo */
-  --mgt-logo-nudge-y: -12mm; /* ajuste vertical (negativo = subir) */
-  --mgt-logo-nudge-x: -6mm;   /* NUEVO: horizontal; negativo = más a la izquierda */
-  --mgt-content-top-pad: 0mm;/* si ves superposición, aumenta un poco (p.ej., 2mm) */
-  --mgt-content-top-pad: 7mm;   /* o 3–4mm si lo quieres más abajo */
+  --mgt-page-margin: 10mm;   /* margen imprimible */
+  --mgt-logo-size: 24mm;     /* altura del logo */
+  --mgt-logo-nudge-y: -20mm; /* SUBIR 20mm respecto al margen superior */
 }
 @media print {
-    header .subtitle { display: none !important; }
-}
   @page { size:A4; margin: var(--mgt-page-margin); }
-  /* Fijar el MISMO logo del header */
-  .logo-wrap, .brand{
-    position: absolute !important;
-    top:  calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-y)) !important;
-    left: calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-x)) !important; /* <-- aquí */
-    z-index: 9999 !important;
-  }
-  .logo-wrap img, .brand img{
-    height: var(--mgt-logo-size) !important;
-    width: auto !important;
-    display: block !important;
-  }
-  /* Limpieza */
   html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
   header, .header, .sheet, .page, main, #app, .container {
-    box-shadow:none !important; border:none !important;
-    padding-top: var(--mgt-content-top-pad) !important;
-    margin-top: 0 !important;
+    margin-top:0 !important; padding-top:0 !important; box-shadow:none !important; border:none !important;
   }
-  /* Asegurar que no exista un logo extra por estilos previos */
-  body::before{ content:none !important; }
+  body::before{
+    content:"";
+    position: fixed;
+    top: calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-y));
+    left: var(--mgt-page-margin);
+    width: auto;
+    height: var(--mgt-logo-size);
+    background: url('icons/logo-magnatest.png') no-repeat left top / contain;
+    z-index: 9999;
+  }
+  header img[src*="logo" i], header img[alt*="magnatest" i], .header img { visibility: hidden !important; }
 }
 </style>
-
-
-  <!-- PWA / iOS meta -->
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="MAGNATEST">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#244A9C">
-  <style id="mgt-app-theme">
-  :root{
-    --mgt-app-bg: #244A9C;
-    --mgt-page-bg: #ffffff;
-  }
-  @media screen, (display-mode: standalone){
-    body{ background: var(--mgt-app-bg); }
-    .sheet, .page, .content, .container{ background: var(--mgt-page-bg) !important; }
-  }
-  @media print{
-    body{ background: #fff !important; }
-  }
-  </style>
 
 </head>
 <body>
@@ -488,5 +456,13 @@ header, .header, .page-header { position: relative; }
 })();
 </script>
 
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register('sw.js').catch(function(err){ console.warn('SW fail', err); });
+  });
+}
+</script>
 </body>
 </html>
