@@ -498,12 +498,13 @@ header, .header, .page-header { position: relative; }
   function pad3(n){return String(n).padStart(3,'0');}
   const KEY='magnatest_seq';
   let n=parseInt(localStorage.getItem(KEY)||'0',10);
-  let badge = Array.from(document.querySelectorAll('div,span,b,i,strong,em'))
+  // Encuentra elemento con "N°"
+  var badge = Array.from(document.querySelectorAll('div,span,b,i,strong,em'))
     .find(el => /N°/i.test(el.textContent));
   if (badge){
     if (!badge.querySelector('#noVal')){
       badge.innerHTML = badge.textContent.replace(/N°\s*\d+|N°\s*$/, 'N° ') + '<span id="noVal">'+pad3(n+1)+'</span>';
-    }else{
+    } else {
       badge.querySelector('#noVal').textContent = pad3(n+1);
     }
   }
@@ -514,26 +515,33 @@ header, .header, .page-header { position: relative; }
 </script>
 
 <script>
-(function(){
-  function findByHeading(text){
-    const xp = "//*[self::h1 or self::h2 or self::h3 or self::h4 or self::div or self::section][contains(normalize-space(.), '"+text+"')]";
-    try{
-      const r = document.evaluate(xp, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-      for(let i=0;i<r.snapshotLength;i++){
-        const el = r.snapshotItem(i);
-        if (el.textContent.trim().toLowerCase().includes(text.toLowerCase())){
-          return el.closest('section') || el.closest('.section') || el;
-        }
+document.addEventListener('DOMContentLoaded', function () {
+  function findSection(label){
+    label = label.toLowerCase();
+    const nodes = document.querySelectorAll('h1,h2,h3,h4,section,div');
+    for (const el of nodes){
+      const txt = (el.textContent||'').trim().toLowerCase();
+      if (txt.includes(label)){
+        return el.closest('section') || el.closest('.section') || el;
       }
-    }catch(e){}
+    }
     return null;
   }
-  const firmas = findByHeading('Nombre / Cargo');
-  const anexo  = findByHeading('Anexo Fotográfico') || findByHeading('Anexo Fotografico');
-  if (firmas && anexo && anexo.parentNode){
-    anexo.parentNode.insertBefore(firmas, anexo);
+  const anexo  = findSection('anexo fotográfico') || findSection('anexo fotografico');
+  const firmas = findSection('nombre / cargo')   || findSection('nombre/cargo') || findSection('firmas');
+
+  if (anexo && firmas && anexo.parentNode){
+    const parent = anexo.parentNode;
+    if (anexo.contains(firmas)) parent.insertBefore(firmas, anexo);
+    parent.insertBefore(firmas, anexo);  // Firmas antes de Anexo
+    parent.appendChild(anexo);           // Anexo al final
+
+    // Centrar caja de firmas sin tocar estilos globales
+    const sigBox = firmas.querySelector('.sig, table, .info');
+    if (sigBox && !sigBox.style.margin) sigBox.style.margin = '0 auto';
   }
-})();
+});
 </script>
+
 </body>
 </html>
