@@ -1,12 +1,13 @@
 <!DOCTYPE html>
+
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Informe de Inspección</title>
-  <meta name="theme-color" content="#0b66c3" />
-  <link rel="manifest" href="manifest.webmanifest" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Informe de Inspección</title>
+<meta content="#0b66c3" name="theme-color"/>
+<link href="manifest.webmanifest" rel="manifest"/>
+<style>
     :root{--a4-w:210mm;--a4-h:297mm;--ink:#111827;--border:#e5e7eb;--bg:#ffffff;--head:#204aa0;--soft:#cfe2ff}
     html,body{height:100%}
     body{margin:0;background:#0f172a;color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
@@ -89,7 +90,6 @@
 }
 
 </style>
-
 <!-- mgt v35 css -->
 <style>
 /* Header/brand forced top-left */
@@ -146,9 +146,7 @@ header, .header, .page-header { position: relative; }
 }
 
 </style>
-
-<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
-
+<link href="./icons/apple-touch-icon.png" rel="apple-touch-icon"/>
 <style id="mgt-fixes-v8">
 :root{
   --mgt-page-margin: 10mm;   /* margen PDF */
@@ -185,15 +183,13 @@ header, .header, .page-header { position: relative; }
   body::before{ content:none !important; }
 }
 </style>
-
-
-  <!-- PWA / iOS meta -->
-  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="MAGNATEST">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="theme-color" content="#244A9C">
-  <style id="mgt-app-theme">
+<!-- PWA / iOS meta -->
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="MAGNATEST" name="apple-mobile-web-app-title"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="#244A9C" name="theme-color"/>
+<style id="mgt-app-theme">
   :root{
     --mgt-app-bg: #244A9C;
     --mgt-page-bg: #ffffff;
@@ -206,117 +202,106 @@ header, .header, .page-header { position: relative; }
     body{ background: #fff !important; }
   }
   </style>
-
 </head>
 <body>
-  <div class="toolbar">
-    <button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
-    <button class="btn" id="btnAddZonas">+ Zonas</button>
-    <button class="btn" id="btnAddResultados">+ Resultados</button>
-    <button class="btn" id="btnAddFotos">+ Fotos</button>
-    <button class="btn" id="btnSave">Guardar</button>
-    <button class="btn" id="btnLoad">Cargar</button>
-    <input type="file" id="fileLoader" accept="application/json" />
-  </div>
+<div class="toolbar">
+<button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+<button class="btn" id="btnAddZonas">+ Zonas</button>
+<button class="btn" id="btnAddResultados">+ Resultados</button>
+<button class="btn" id="btnAddFotos">+ Fotos</button>
+<button class="btn" id="btnSave">Guardar</button>
+<button class="btn" id="btnLoad">Cargar</button>
+<input accept="application/json" id="fileLoader" type="file"/>
+</div>
+<div class="sheet" id="sheet">
+<div class="logo-wrap"><img alt="MAGNATEST" class="logo" src="icons/logo-magnatest.png"/></div>
+<header class="header">
+<div class="h-title">INFORME DE INSPECCIÓN</div>
+<div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
+</header>
+<!-- 1 -->
+<section class="section" id="sec-antecedentes">
+<h2><span class="num"></span> Antecedentes</h2>
+<div class="table-wrap">
+<table><tbody>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Orden de Trabajo</td><td contenteditable="true">505902857/01</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Cliente</td><td contenteditable="true">INTERCAMBIO O INTERNO CRC</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Modelo del Equipo</td><td contenteditable="true">79S3</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Nombre Componente</td><td contenteditable="true">CONVERTIDOR TORQUE</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Proyecto / Obra</td><td contenteditable="true">Contrato X - Planta Y</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Ubicación</td><td contenteditable="true">Faena / Ciudad / Coordenadas</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Norma aplicable</td><td contenteditable="true">ISO 5817</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Método (END)</td><td contenteditable="true">MT – Partículas Magnéticas</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Tipo de componente</td><td contenteditable="true">Soldadura</td></tr>
+</tbody></table>
+</div>
+</section>
+<!-- 2 -->
+<section class="section" id="sec-tecnica">
+<h2><span class="num"></span> Técnica de Inspección (MT)</h2>
+<div class="table-wrap"><table><tbody>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Técnica</td><td contenteditable="true">Residual</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Imantación</td><td contenteditable="true">Longitudinal</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Partículas magnéticas</td><td contenteditable="true">Fluorescentes</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Equipo</td><td contenteditable="true">Estacionario</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Corriente</td><td contenteditable="true">1500 A</td></tr>
+</tbody></table></div>
+</section>
+<!-- 3 -->
+<section class="section" id="sec-zonas">
+<h2><span class="num"></span> Zonas inspeccionadas</h2>
+<div class="table-wrap"><table id="tabla-zonas">
+<thead><tr><th>Componente</th><th>Descripción</th></tr></thead>
+<tbody><tr><td contenteditable="true">Z1</td><td contenteditable="true">Carcaza</td></tr></tbody>
+</table></div>
+</section>
+<!-- 4 -->
+<section class="section" id="sec-resultados">
+<h2><span class="num"></span> Resultados obtenidos</h2>
+<div class="table-wrap"><table id="tabla-resultados">
+<thead><tr>
+<th>Pieza/Zona</th><th>Sin defecto</th><th>Tipo de Defecto</th>
+<th>Cantidad</th><th>Ubicación / Tamaño</th><th>Condición Final</th>
+</tr></thead>
+<tbody>
+<tr>
+<td contenteditable="true">Z1</td><td contenteditable="true">-</td>
+<td contenteditable="true">FISURA</td><td contenteditable="true">1</td>
+<td contenteditable="true">VER ANEXO</td><td contenteditable="true">RECHAZA</td>
+</tr>
+</tbody></table></div>
+</section>
+<!-- 5 -->
+<section class="section" id="sec-observaciones">
+<h2><span class="num"></span> Observaciones</h2>
+<div class="notes-simple" contenteditable="true">Anote aquí detalles generales, recomendaciones y acciones.</div>
+</section><div class="sig-table">
+<table>
+<tr><td class="sig-label">Nombre / Cargo</td><td class="sig-fill"><div class="sig-underline" contenteditable="true">Nombre completo — Cargo</div></td></tr>
+<tr><td class="sig-label">Fecha</td><td class="sig-fill"><div class="sig-underline" contenteditable="true">dd/mm/aaaa</div></td></tr>
+</table>
+</div>
+<!-- 6 -->
+<section class="section" id="sec-fotos">
+<h2><span class="num"></span> Anexo Fotográfico</h2>
+<div id="foto-groups"></div>
+</section>
+<!-- Firma final -->
 
-  <div class="sheet" id="sheet">
-    <div class="logo-wrap"><img class="logo" src="icons/logo-magnatest.png" alt="MAGNATEST" /></div>
-    <header class="header">
-      <div class="h-title">INFORME DE INSPECCIÓN</div>
-      <div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
-    </header>
-
-    <!-- 1 -->
-    <section class="section" id="sec-antecedentes">
-      <h2><span class="num"></span> Antecedentes</h2>
-      <div class="table-wrap">
-        <table><tbody>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Orden de Trabajo</td><td contenteditable="true">505902857/01</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Cliente</td><td contenteditable="true">INTERCAMBIO O INTERNO CRC</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Modelo del Equipo</td><td contenteditable="true">79S3</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Nombre Componente</td><td contenteditable="true">CONVERTIDOR TORQUE</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Proyecto / Obra</td><td contenteditable="true">Contrato X - Planta Y</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Ubicación</td><td contenteditable="true">Faena / Ciudad / Coordenadas</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Norma aplicable</td><td contenteditable="true">ISO 5817</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Método (END)</td><td contenteditable="true">MT – Partículas Magnéticas</td></tr>
-          <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Tipo de componente</td><td contenteditable="true">Soldadura</td></tr>
-        </tbody></table>
-      </div>
-    </section>
-
-    <!-- 2 -->
-    <section class="section" id="sec-tecnica">
-      <h2><span class="num"></span> Técnica de Inspección (MT)</h2>
-      <div class="table-wrap"><table><tbody>
-        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Técnica</td><td contenteditable="true">Residual</td></tr>
-        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Imantación</td><td contenteditable="true">Longitudinal</td></tr>
-        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Partículas magnéticas</td><td contenteditable="true">Fluorescentes</td></tr>
-        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Equipo</td><td contenteditable="true">Estacionario</td></tr>
-        <tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Corriente</td><td contenteditable="true">1500 A</td></tr>
-      </tbody></table></div>
-    </section>
-
-    <!-- 3 -->
-    <section class="section" id="sec-zonas">
-      <h2><span class="num"></span> Zonas inspeccionadas</h2>
-      <div class="table-wrap"><table id="tabla-zonas">
-        <thead><tr><th>Componente</th><th>Descripción</th></tr></thead>
-        <tbody><tr><td contenteditable="true">Z1</td><td contenteditable="true">Carcaza</td></tr></tbody>
-      </table></div>
-    </section>
-
-    <!-- 4 -->
-    <section class="section" id="sec-resultados">
-      <h2><span class="num"></span> Resultados obtenidos</h2>
-      <div class="table-wrap"><table id="tabla-resultados">
-        <thead><tr>
-          <th>Pieza/Zona</th><th>Sin defecto</th><th>Tipo de Defecto</th>
-          <th>Cantidad</th><th>Ubicación / Tamaño</th><th>Condición Final</th>
-        </tr></thead>
-        <tbody>
-          <tr>
-            <td contenteditable="true">Z1</td><td contenteditable="true">-</td>
-            <td contenteditable="true">FISURA</td><td contenteditable="true">1</td>
-            <td contenteditable="true">VER ANEXO</td><td contenteditable="true">RECHAZA</td>
-          </tr>
-        </tbody></table></div>
-    </section>
-
-    <!-- 5 -->
-    <section class="section" id="sec-observaciones">
-      <h2><span class="num"></span> Observaciones</h2>
-      <div class="notes-simple" contenteditable="true">Anote aquí detalles generales, recomendaciones y acciones.</div>
-    </section>
-
-    <!-- 6 -->
-    <section class="section" id="sec-fotos">
-      <h2><span class="num"></span> Anexo Fotográfico</h2>
-      <div id="foto-groups"></div>
-    </section>
-
-    <!-- Firma final -->
-    <div class="sig-table">
-      <table>
-        <tr><td class="sig-label">Nombre / Cargo</td><td class="sig-fill"><div contenteditable="true" class="sig-underline">Nombre completo — Cargo</div></td></tr>
-        <tr><td class="sig-label">Fecha</td><td class="sig-fill"><div contenteditable="true" class="sig-underline">dd/mm/aaaa</div></td></tr>
-      </table>
-    </div>
-  </div>
-
-  <template id="tpl-foto-group">
-    <div class="group">
-      <div class="group-head">
-        <div class="group-name" contenteditable="true">Nombre del componente</div>
-        <div class="controls">
-          <button type="button" class="btnPick">Cargar fotos</button>
-          <input class="picker" type="file" accept="image/*" multiple capture="environment" />
-        </div>
-      </div>
-      <div class="gallery" style="--cols:2"></div>
-    </div>
-  </template>
-
-  <script>
+</div>
+<template id="tpl-foto-group">
+<div class="group">
+<div class="group-head">
+<div class="group-name" contenteditable="true">Nombre del componente</div>
+<div class="controls">
+<button class="btnPick" type="button">Cargar fotos</button>
+<input accept="image/*" capture="environment" class="picker" multiple="" type="file"/>
+</div>
+</div>
+<div class="gallery" style="--cols:2"></div>
+</div>
+</template>
+<script>
     // Fotos (drag & drop para ordenar)
     const groupsWrap=document.getElementById('foto-groups');
     const tplGroup=document.getElementById('tpl-foto-group');
@@ -421,7 +406,6 @@ header, .header, .page-header { position: relative; }
       const r=new FileReader(); r.onload=e=>{ try{ restoreState(JSON.parse(e.target.result)); }catch(err){ alert('Archivo inválido'); } };
       r.readAsText(f); ev.target.value=''; });
   </script>
-
 <!-- mgt v35 js -->
 <script>
 (function(){
@@ -485,70 +469,6 @@ header, .header, .page-header { position: relative; }
     mo.observe(document.body, {childList:true, subtree:true});
     window.mgtRefreshPhotoButtons = decorateAll;
   });
-})();
-</script>
-
-
-<script>
-  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
-</script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function(){
-  function findAnexo(){
-    const labels = ['anexo fotográfico','anexo fotografico'];
-    const nodes = document.querySelectorAll('h1,h2,h3,h4,strong,section,div');
-    for(const el of nodes){
-      const t = (el.textContent||'').toLowerCase().trim();
-      if (labels.some(l => t.includes(l))){
-        return el.closest('section') || el.closest('.section') || el;
-      }
-    }
-    return null;
-  }
-  function findFirmas(){
-    // Busca un bloque que tenga "Nombre / Cargo" y "Fecha"
-    const nodes = document.querySelectorAll('section,div,table');
-    for(const el of nodes){
-      const t = (el.textContent||'').toLowerCase();
-      if (/nombre\s*\/\s*cargo/.test(t) && /fecha/.test(t)){
-        return el.closest('section') || el.closest('.section') || el;
-      }
-    }
-    return null;
-  }
-  const anexo  = findAnexo();
-  const firmas = findFirmas();
-  if (anexo && firmas && anexo.parentNode){
-    const parent = anexo.parentNode;
-    if (anexo.contains(firmas)) parent.insertBefore(firmas, anexo);
-    parent.insertBefore(firmas, anexo);   // Firmas antes de Anexo
-    parent.appendChild(anexo);            // Anexo al fondo
-    // Centrado del bloque de firmas (no toca clases/estilos globales)
-    const sigBox = firmas.querySelector('.sig, table, .info');
-    if (sigBox) sigBox.style.margin = '0 auto';
-  }
-});
-</script>
-
-
-<script>
-(function(){
-  function pad3(n){return String(n).padStart(3,'0');}
-  const KEY='magnatest_seq';
-  let n=parseInt(localStorage.getItem(KEY)||'0',10);
-  var badge = Array.from(document.querySelectorAll('div,span,b,i,strong,em'))
-    .find(el => /N°/i.test(el.textContent));
-  if (badge){
-    if (!badge.querySelector('#noVal')){
-      badge.innerHTML = badge.textContent.replace(/N°\s*\d+|N°\s*$/, 'N° ') + '<span id="noVal">'+pad3(n+1)+'</span>';
-    } else {
-      badge.querySelector('#noVal').textContent = pad3(n+1);
-    }
-  }
-  function bump(){ n++; localStorage.setItem(KEY,String(n)); var s=document.getElementById('noVal'); if(s){ s.textContent=pad3(n+1);} }
-  var btn = document.querySelector('[data-print], #btnImprimir, #bPrint, button[onclick*="print"]');
-  if (btn){ btn.addEventListener('click', bump); }
 })();
 </script>
 </body>
