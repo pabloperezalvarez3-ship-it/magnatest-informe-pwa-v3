@@ -1,6 +1,6 @@
 
-// sw.js — cache simple para trabajar offline
-const CACHE = 'magnatest-v1';
+// sw.js — offline cache (v2)
+const CACHE = 'magnatest-v2';
 const CORE = [
   './',
   './index.html',
@@ -21,11 +21,11 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   e.respondWith(
     caches.match(req).then(hit => hit || fetch(req).then(res => {
-      const copy = res.clone();
-      caches.open(CACHE).then(c => c.put(req, copy));
+      const copy=res.clone();
+      caches.open(CACHE).then(c=>c.put(req, copy));
       return res;
-    }).catch(() => {
-      if (req.mode === 'navigate') return caches.match('./index.html');
+    }).catch(()=>{
+      if (req.mode==='navigate') return caches.match('./index.html');
     }))
   );
 });
