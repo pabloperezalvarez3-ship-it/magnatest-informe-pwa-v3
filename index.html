@@ -89,6 +89,9 @@
   .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
 }
 
+
+#report-no{position:absolute; right:24px; top:78px; font-weight:600; font-size:14px; opacity:.6;}
+@media print{#report-no{position:absolute; right:24px; top:78px;}}
 </style>
 <!-- mgt v35 css -->
 <style>
@@ -100,14 +103,6 @@ header, .header, .page-header { position: relative; }
 
 @media print {
   .sig-table{ page-break-before: always; break-inside: avoid; margin-top: 8mm; }
-}
-
-/* Ajuste de espacio entre la firma y el Anexo Fotográfico */
-#sec-fotos {
-  margin-top: 40px !important;
-}
-@media print {
-  #sec-fotos { margin-top: 40px !important; }
 }
 
 
@@ -223,10 +218,10 @@ header, .header, .page-header { position: relative; }
 </div>
 <div class="sheet" id="sheet">
 <div class="logo-wrap"><img alt="MAGNATEST" class="logo" src="icons/logo-magnatest.png"/></div>
-<header class="header">
+<header class="header" style="position:relative">
 <div class="h-title">INFORME DE INSPECCIÓN</div>
 <div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
-</header>
+<div id="report-no">n° 001</div></header>
 <!-- 1 -->
 <section class="section" id="sec-antecedentes">
 <h2><span class="num"></span> Antecedentes</h2>
