@@ -102,6 +102,14 @@ header, .header, .page-header { position: relative; }
   .sig-table{ page-break-before: always; break-inside: avoid; margin-top: 8mm; }
 }
 
+/* Ajuste de espacio entre la firma y el Anexo Fotográfico */
+#sec-fotos {
+  margin-top: 40px !important;
+}
+@media print {
+  #sec-fotos { margin-top: 40px !important; }
+}
+
 
 /* === Logo bien esquinado en pantalla e impresión === */
 :root{ --page-margin: 10mm; --logo-nudge-y: -1mm; --logo-nudge-x: -1mm; }
