@@ -1,148 +1,482 @@
-<!DOCTYPE html><html lang="es"><head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<link rel="manifest" href="manifest.webmanifest"/>
-<title>MAGNATEST - Informe</title>
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<title>Informe de Inspección</title>
+<meta content="#0b66c3" name="theme-color"/>
+<link href="manifest.webmanifest" rel="manifest"/>
 <style>
-:root{--bg:#0b1220;--sheet:#fff;--ring:#c2c8f6;--title:#0f1a2b;--accent:#233884;--alt:#f6f8ff;--tb:#dbe1f2;--blue-soft:#b9ccff}
-*{box-sizing:border-box}body{margin:0;padding:16px;background:var(--bg);color:#111;font-family:Arial,Helvetica,sans-serif}
-.controls{max-width:980px;margin:0 auto 16px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.controls button{padding:10px 14px;border-radius:10px;border:1px solid #0f1a2b;background:#0f1a2b;color:#fff;font-weight:600}
-.sheet{max-width:980px;margin:0 auto;background:var(--sheet);border-radius:18px;box-shadow:0 20px 50px #0006;padding:24px 28px 40px;border:1px solid #0002}
-.header-pill{border:2px solid var(--ring);border-radius:35px;padding:16px 22px;display:grid;grid-template-columns:240px 1fr 180px;gap:10px;align-items:center;margin-bottom:18px}
-.header-left img{max-width:220px;height:auto;display:block}
-.header-center{text-align:center;color:var(--title)}
-.header-center h1{margin:0;font-size:24px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
-.header-center .line2{font-size:16px;font-weight:600;color:#1a237e;margin-top:2px}
-.header-center .line3{font-size:15px;font-weight:500;color:#1f2f64;margin-top:0}
-.header-center .line4{font-size:13px;color:#3b4b7a;font-style:italic;margin-top:4px}
-.header-right{font-size:14px;color:#6b7280;display:flex;flex-direction:column;gap:12px;justify-self:end;align-items:flex-end}
-.badge-no{border:3px solid #79a1f0;border-radius:10px;padding:4px 10px;display:inline-block;background:#ffffff}
-.badge-no .nlab{font-weight:700;margin-right:4px}.badge-no .nval{font-weight:700;color:#222}
-.section{margin-top:22px}.section-title{display:flex;gap:10px;align-items:center;font-weight:800;color:#1c274c;font-size:20px;margin:0 0 12px 0}
-.badge{background:#e8efff;color:#1a237e;border:1px solid #cdd5ff;border-radius:10px;padding:6px 10px;font-weight:800}
-.info{border:1px solid var(--tb);border-radius:14px;overflow:hidden}.row{display:flex;border-top:1px solid var(--tb)}.row:first-child{border-top:none}
-.label{background:var(--alt);min-width:260px;padding:12px 14px;border-right:1px solid var(--tb);font-weight:700;color:#21305e}
-.val{flex:1;padding:12px 14px}[contenteditable]{outline:0}
-.table{border:1px solid var(--tb);border-radius:14px;overflow:hidden}.thead{display:flex;background:var(--accent);color:#fff;font-weight:700}
-.thead div{flex:1;padding:12px 14px;border-right:1px solid #ffffff55}.thead div:last-child{border-right:none}
-.tbody .row div{flex:1;padding:12px 14px;border-right:1px solid var(--tb)}
-#obs{border:1px solid var(--tb);border-radius:14px;min-height:120px;padding:12px 14px}
-.sig{border:1px solid var(--tb);border-radius:14px;overflow:hidden;max-width:560px;margin:0 auto}
-.fg{border:1px solid var(--tb);border-radius:14px;padding:12px 14px;margin-bottom:16px}
-.fg header{font-weight:700;color:#21305e;margin-bottom:8px}
-.list{display:flex;gap:12px;flex-wrap:wrap}
-.item{position:relative;width:160px;border:2px solid #d7e2ff;border-radius:10px;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.08)}
-.item img{width:100%;display:block;border-bottom:1px solid #e6ecff}
-.cap{min-height:38px;padding:6px 8px;font-size:13px}
-.btn-del{position:absolute;top:6px;right:6px;width:22px;height:22px;border-radius:50%;border:1px solid #ccc;background:#fff;color:#d00;font-weight:700;cursor:pointer}
-.item[draggable='true']{cursor:grab}.item.dragging{opacity:.6}.drop-target{outline:3px dashed var(--blue-soft);outline-offset:3px;border-color:var(--blue-soft)}
-@media print{body{background:#fff;padding:0}.controls{display:none}.sheet{border:1px solid #000;border-radius:0;margin:0;box-shadow:none}.header-pill{page-break-before:avoid}}
-</style></head><body>
-<div class="controls">
-<button id="bPrint">Imprimir / Guardar PDF</button><button id="bZona">+ Zonas</button><button id="bRes">+ Resultados</button><button id="bFG">+ Fotos</button><button id="bSave">Guardar</button><button id="bLoad">Cargar</button>
-<input type="file" id="fJson" accept="application/json" style="display:none"/></div>
-<div class="sheet">
-  <div class="header-pill">
-    <div class="header-left"><img src="assets/logo.png" alt="logo"></div>
-    <div class="header-center">
-      <h1>INFORME DE INSPECCIÓN</h1>
-      <div class="line2">ENSAYOS NO DESTRUCTIVOS</div>
-      <div class="line3">PARTÍCULAS MAGNÉTICAS (MT)</div>
-      <div class="line4">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
-    </div>
-    <div class="header-right">
-      <div id="noBox" class="badge-no"><span class="nlab">N°</span><span class="nval" id="noVal">001</span></div>
-      <div style="display:flex;gap:8px;align-items:center"><span>fecha</span><div class="val" contenteditable id="hdrFecha" style="min-width:110px;border-bottom:1px solid #c8cee8"></div></div>
-    </div>
-  </div>
+    :root{--a4-w:210mm;--a4-h:297mm;--ink:#111827;--border:#e5e7eb;--bg:#ffffff;--head:#204aa0;--soft:#cfe2ff}
+    html,body{height:100%}
+    body{margin:0;background:#0f172a;color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
+    .toolbar{position:sticky;top:0;z-index:10;max-width:var(--a4-w);margin:0 auto;padding:10px 8px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;background:#0f172a}
+    .btn{border:1px solid #334155;background:#1f2937;color:#e5e7eb;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+    input[type="file"]{display:none!important}
 
-  <div class="section"><div class="section-title"><span class="badge">1</span><span>Antecedentes</span></div>
-    <div class="info" id="ant">
-      <div class="row"><div class="label">Orden de Trabajo</div><div class="val" contenteditable>505902857/01</div></div>
-      <div class="row"><div class="label">Cliente</div><div class="val" contenteditable>INTERCAMBIO O INTERNO CRC</div></div>
-      <div class="row"><div class="label">Modelo del Equipo</div><div class="val" contenteditable>793S</div></div>
-      <div class="row"><div class="label">Nombre Componente</div><div class="val" contenteditable>CONVERTIDOR TORQUE</div></div>
-      <div class="row"><div class="label">Proyecto / Obra</div><div class="val" contenteditable>Contrato X - Planta Y</div></div>
-      <div class="row"><div class="label">Ubicación</div><div class="val" contenteditable>Faena / Ciudad / Coordenadas</div></div>
-      <div class="row"><div class="label">Norma aplicable</div><div class="val" contenteditable>ISO 5817</div></div>
-      <div class="row"><div class="label">Método (END)</div><div class="val" contenteditable>MT – Partículas Magnéticas</div></div>
-      <div class="row"><div class="label">Tipo de componente</div><div class="val" contenteditable>Soldadura</div></div>
-    </div>
-  </div>
+    .sheet{counter-reset:sec;width:var(--a4-w);min-height:var(--a4-h);margin:12px auto 24px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.35);border-radius:10px;padding:18mm 16mm;box-sizing:border-box;position:relative}
+    .logo-wrap{position:absolute;top:6mm;left:10mm}
+    .logo{width:34mm}
+    #sec-antecedentes{margin-top:14mm}
 
-  <div class="section"><div class="section-title"><span class="badge">2</span><span>Técnicas y equipos de inspección (MT)</span></div>
-    <div class="info" id="tec">
-      <div class="row"><div class="label">Técnica</div><div class="val" contenteditable>Residual</div></div>
-      <div class="row"><div class="label">Imantación</div><div class="val" contenteditable>Longitudinal</div></div>
-      <div class="row"><div class="label">Partículas magnéticas</div><div class="val" contenteditable>Fluorescentes</div></div>
-      <div class="row"><div class="label">Equipo</div><div class="val" contenteditable>Estacionario</div></div>
-      <div class="row"><div class="label">Corriente</div><div class="val" contenteditable>1500 A</div></div>
-      <div class="row"><div class="label">Marca de equipo</div><div class="val" contenteditable>Indicar marca</div></div>
-      <div class="row"><div class="label">Modelo de equipo</div><div class="val" contenteditable>Indicar modelo</div></div>
-    </div>
-  </div>
+    .header{text-align:center;margin:0 auto 10mm}
+    .h-title{font-size:22px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
+    .h-sub{color:#6b7280;font-size:12px}
 
-  <div class="section"><div class="section-title"><span class="badge">3</span><span>Zonas inspeccionadas</span></div>
-    <div class="table" id="zonas">
-      <div class="thead"><div>Componente</div><div>Descripción</div></div>
-      <div class="tbody" id="zonasBody"><div class="row"><div contenteditable>Z1</div><div contenteditable>Carcaza</div></div></div>
-    </div>
-  </div>
+    .section{margin-bottom:9mm;break-inside:avoid;counter-increment:sec}
+    .section h2{display:flex;align-items:center;gap:10px;font-size:18px;margin:0 0 6mm 0;break-after:avoid}
+    .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;background:#e6efff;color:#113c88;font-weight:800}
+    .num::after{content:counter(sec)}
 
-  <div class="section"><div class="section-title"><span class="badge">4</span><span>Resultados obtenidos</span></div>
-    <div class="table" id="res">
-      <div class="thead"><div>Pieza/Zona</div><div>Sin defecto</div><div>Tipo de Defecto</div><div>Cantidad</div><div>Ubicación / Tamaño</div><div>Condición Final</div></div>
-      <div class="tbody" id="resBody"><div class="row"><div contenteditable>Z1</div><div contenteditable>-</div><div contenteditable>FISURA</div><div contenteditable>1</div><div contenteditable>VER ANEXO</div><div contenteditable>RECHAZA</div></div></div>
-    </div>
-  </div>
+    .table-wrap{border:1px solid var(--border);border-radius:12px;overflow:hidden}
+    table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+    thead th{background:var(--head);color:#fff;text-align:left;padding:10px 8px;font-weight:700}
+    tbody td{border-top:1px solid var(--border);border-right:1px solid var(--border);padding:9px 8px;vertical-align:top;background:#fff}
+    tbody td:last-child{border-right:none}
+    [contenteditable="true"]{outline:none}
+    [contenteditable="true"]:focus{box-shadow:inset 0 0 0 2px #d6e7fb;background:#f8fbff}
 
-  <div class="section"><div class="section-title"><span class="badge">5</span><span>Observaciones</span></div>
-    <div id="obs" contenteditable>Anote aquí detalles generales, recomendaciones y acciones.</div>
-  </div>
+    /* Centro de texto SOLO sección resultados */
+    #tabla-resultados tbody td{ text-align:center; }
+    #tabla-resultados tbody td:first-child{ text-align:center; } /* si prefieres izq, cambia a left */
 
-  <div class="section"><div class="section-title"><span class="badge">6</span><span>Nombre / Cargo – Firma</span></div>
-    <div class="sig" id="sig">
-      <div class="row"><div class="label">Nombre / Cargo</div><div class="val"><div contenteditable style="border-bottom:1px solid #0f1a2b;min-height:22px">Nombre completo — Cargo</div></div></div>
-      <div class="row"><div class="label">Fecha</div><div class="val"><div contenteditable style="border-bottom:1px solid #0f1a2b;min-height:22px">dd/mm/aaaa</div></div></div>
-    </div>
-  </div>
+    /* Anexo: título formal y galería 2 columnas con borde tenue */
+    .group{margin:8mm 0 10mm}
+    .group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .group-name{display:inline-block;padding:8px 12px;border:1px solid var(--border);border-radius:12px;background:#eef5ff;color:#0f3e79;font-weight:700;min-width:46mm;max-width:100mm}
+    .gallery{--cols:2;--gap:10px;display:grid;grid-template-columns:repeat(var(--cols),1fr);gap:var(--gap)}
+    .photo{position:relative;border:2px solid var(--soft);border-radius:12px;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid;cursor:grab;box-shadow:0 0 0 4px #f6f9ff inset}
+    .photo:active{cursor:grabbing}
+    .photo::before{content:"";display:block;aspect-ratio:4/3;}
+    .photo>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+    .drag-over{outline:3px dashed #2563eb; outline-offset:-6px}
 
-  <div class="section"><div class="section-title"><span class="badge">7</span><span>Anexo Fotográfico</span></div>
-    <div id="fgs"></div>
-  </div>
+    /* Firma */
+    .sig-table { width: 70%; margin: 12mm auto 0; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+    .sig-table table { width:100%; border-collapse:collapse; table-layout:fixed; }
+    .sig-table td { border-top:1px solid var(--border); padding:10px; font-size:13px; vertical-align:middle; }
+    .sig-table tr:first-child td { border-top:none; }
+    .sig-label { width:38%; background:#eef5ff; font-weight:700; color:#0f3e79; }
+    .sig-fill { background:#fff; }
+    .sig-underline { border-bottom:1.5px solid #9ec3ff; height:24px; }
+
+    /* Observaciones simple */
+    .notes-simple{border:1px solid var(--border);border-radius:12px;min-height:35mm;padding:10px;background:#fff}
+
+    @page{size:A4;margin:12mm 10mm}
+    @media print{
+      .toolbar,.controls{display:none!important}
+      body{background:#fff}
+      .sheet{margin:0;box-shadow:none;border-radius:0;padding:0}
+      #sec-fotos .group + .group{break-before:page}
+      .photo{border:2px solid var(--soft);box-shadow:0 0 0 4px #f6f9ff inset} /* mantener borde tenue también en PDF */
+    }
+  
+/* === Precise logo placement for PRINT === */
+:root{
+  --pm-top: 8mm;
+  --pm-left: 10mm;
+  --logo-nudge-x: -2mm;
+  --logo-nudge-y: -2mm;
+}
+@media print {
+  @page {
+    margin: var(--pm-top) 10mm 12mm var(--pm-left);
+  }
+  .report-header, header, .title-wrap { padding-top: 0 !important; margin-top: 0 !important; }
+  .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
+  .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
+}
+
+</style>
+<!-- mgt v35 css -->
+<style>
+/* Header/brand forced top-left */
+header, .header, .page-header { position: relative; }
+.brand, .app-brand, .brand-logo, .logo, .mgt-brand { position: absolute !important; top: 4px !important; left: 18px !important; z-index: 10; }
+.brand img, .app-brand img, .brand-logo img, .logo img, .mgt-brand img { height: 60px !important; width: auto !important; display:block; }
+
+
+@media print {
+  .sig-table{ page-break-before: always; break-inside: avoid; margin-top: 8mm; }
+}
+
+/* Ajuste de espacio entre la firma y el Anexo Fotográfico */
+#sec-fotos {
+  margin-top: 40px !important;
+}
+@media print {
+  #sec-fotos { margin-top: 40px !important; }
+}
+
+
+/* === Logo bien esquinado en pantalla e impresión === */
+:root{ --page-margin: 10mm; --logo-nudge-y: -1mm; --logo-nudge-x: -1mm; }
+@media print {
+  @page { margin: var(--page-margin); }
+  .report-header, header, .title-wrap{ padding-top:0 !important; margin-top:0 !important; }
+  .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
+}
+
+/* Center report title block */
+.report-title, h1.report-title, .title-main { text-align: center; margin: 0; padding-top: 6px; }
+
+/* Photo tiles: add light border + delete button */
+.mgt-photo, .mgt-photo-card, .photo, .photo-card, .gallery-item, .evidence-photo, .evidence .item, figure.photo {
+  position: relative; border-radius: 14px; overflow: hidden; outline: 1.5px solid rgba(60,110,200,.25);
+}
+.mgt-remove { position:absolute; top:8px; right:8px; border:1px solid #cfe0ff; background:#fff; color:#1f3a93;
+  font-size: .8rem; line-height:1; padding:4px 8px; border-radius:10px; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,.08);
+}
+.mgt-remove:hover{ background:#eef3ff; }
+
+@media print{
+  .mgt-remove{ display:none !important; }
+  .brand, .app-brand, .brand-logo, .logo, .mgt-brand { top: 0 !important; left: 0 !important; }
+  .report-title, h1.report-title, .title-main { padding-top: 0; }
+}
+
+/* === Precise logo placement for PRINT === */
+:root{
+  --pm-top: 8mm;
+  --pm-left: 10mm;
+  --logo-nudge-x: -2mm;
+  --logo-nudge-y: -2mm;
+}
+@media print {
+  @page {
+    margin: var(--pm-top) 10mm 12mm var(--pm-left);
+  }
+  .report-header, header, .title-wrap { padding-top: 0 !important; margin-top: 0 !important; }
+  .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
+  .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
+}
+
+</style>
+<link href="./icons/apple-touch-icon.png" rel="apple-touch-icon"/>
+<style id="mgt-fixes-v8">
+:root{
+  --mgt-page-margin: 10mm;   /* margen PDF */
+  --mgt-logo-size: 15mm;     /* altura del logo */
+  --mgt-logo-nudge-y: -12mm; /* ajuste vertical (negativo = subir) */
+  --mgt-logo-nudge-x: -6mm;   /* NUEVO: horizontal; negativo = más a la izquierda */
+  --mgt-content-top-pad: 0mm;/* si ves superposición, aumenta un poco (p.ej., 2mm) */
+  --mgt-content-top-pad: 7mm;   /* o 3–4mm si lo quieres más abajo */
+}
+@media print {
+    header .subtitle { display: none !important; }
+}
+  @page { size:A4; margin: var(--mgt-page-margin); }
+  /* Fijar el MISMO logo del header */
+  .logo-wrap, .brand{
+    position: absolute !important;
+    top:  calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-y)) !important;
+    left: calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-x)) !important; /* <-- aquí */
+    z-index: 9999 !important;
+  }
+  .logo-wrap img, .brand img{
+    height: var(--mgt-logo-size) !important;
+    width: auto !important;
+    display: block !important;
+  }
+  /* Limpieza */
+  html, body { margin:0 !important; padding:0 !important; background:#fff !important; }
+  header, .header, .sheet, .page, main, #app, .container {
+    box-shadow:none !important; border:none !important;
+    padding-top: var(--mgt-content-top-pad) !important;
+    margin-top: 0 !important;
+  }
+  /* Asegurar que no exista un logo extra por estilos previos */
+  body::before{ content:none !important; }
+}
+</style>
+<!-- PWA / iOS meta -->
+<link href="icons/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
+<meta content="yes" name="apple-mobile-web-app-capable"/>
+<meta content="MAGNATEST" name="apple-mobile-web-app-title"/>
+<meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"/>
+<meta content="#244A9C" name="theme-color"/>
+<style id="mgt-app-theme">
+  :root{
+    --mgt-app-bg: #244A9C;
+    --mgt-page-bg: #ffffff;
+  }
+  @media screen, (display-mode: standalone){
+    body{ background: var(--mgt-app-bg); }
+    .sheet, .page, .content, .container{ background: var(--mgt-page-bg) !important; }
+  }
+  @media print{
+    body{ background: #fff !important; }
+  }
+  </style>
+</head>
+<body>
+<div class="toolbar">
+<button class="btn" onclick="window.print()">Imprimir / Guardar PDF</button>
+<button class="btn" id="btnAddZonas">+ Zonas</button>
+<button class="btn" id="btnAddResultados">+ Resultados</button>
+<button class="btn" id="btnAddFotos">+ Fotos</button>
+<button class="btn" id="btnSave">Guardar</button>
+<button class="btn" id="btnLoad">Cargar</button>
+<input accept="application/json" id="fileLoader" type="file"/>
 </div>
-
-<template id="tplGroup"><div class="fg"><header contenteditable>Nombre del componente</header><div class="list"></div><div style="margin-top:8px"><button class="addFoto" style="padding:8px 12px;border:1px solid #0f1a2b;background:#0f1a2b;color:#fff;border-radius:8px">Cargar fotos</button></div></div></template>
-<template id="tplItem"><div class="item" draggable="true"><button class="btn-del" title="Eliminar">×</button><img alt="foto"/><div class="cap" contenteditable>Descripción / hallazgo</div></div></template>
-
+<div class="sheet" id="sheet">
+<div class="logo-wrap"><img alt="MAGNATEST" class="logo" src="icons/logo-magnatest.png"/></div>
+<header class="header">
+<div class="h-title">INFORME DE INSPECCIÓN</div>
+<div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
+</header>
+<!-- 1 -->
+<section class="section" id="sec-antecedentes">
+<h2><span class="num"></span> Antecedentes</h2>
+<div class="table-wrap">
+<table><tbody>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Orden de Trabajo</td><td contenteditable="true">505902857/01</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Cliente</td><td contenteditable="true">INTERCAMBIO O INTERNO CRC</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Modelo del Equipo</td><td contenteditable="true">79S3</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Nombre Componente</td><td contenteditable="true">CONVERTIDOR TORQUE</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Proyecto / Obra</td><td contenteditable="true">Contrato X - Planta Y</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Ubicación</td><td contenteditable="true">Faena / Ciudad / Coordenadas</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Norma aplicable</td><td contenteditable="true">ISO 5817</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Método (END)</td><td contenteditable="true">MT – Partículas Magnéticas</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Tipo de componente</td><td contenteditable="true">Soldadura</td></tr>
+</tbody></table>
+</div>
+</section>
+<!-- 2 -->
+<section class="section" id="sec-tecnica">
+<h2><span class="num"></span> Técnica de Inspección (MT)</h2>
+<div class="table-wrap"><table><tbody>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Técnica</td><td contenteditable="true">Residual</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Imantación</td><td contenteditable="true">Longitudinal</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Partículas magnéticas</td><td contenteditable="true">Fluorescentes</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Equipo</td><td contenteditable="true">Estacionario</td></tr>
+<tr><td style="width:35%;background:#eef5ff;font-weight:700;color:#0f3e79;">Corriente</td><td contenteditable="true">1500 A</td></tr>
+</tbody></table></div>
+</section>
+<!-- 3 -->
+<section class="section" id="sec-zonas">
+<h2><span class="num"></span> Zonas inspeccionadas</h2>
+<div class="table-wrap"><table id="tabla-zonas">
+<thead><tr><th>Componente</th><th>Descripción</th></tr></thead>
+<tbody><tr><td contenteditable="true">Z1</td><td contenteditable="true">Carcaza</td></tr></tbody>
+</table></div>
+</section>
+<!-- 4 -->
+<section class="section" id="sec-resultados">
+<h2><span class="num"></span> Resultados obtenidos</h2>
+<div class="table-wrap"><table id="tabla-resultados">
+<thead><tr>
+<th>Pieza/Zona</th><th>Sin defecto</th><th>Tipo de Defecto</th>
+<th>Cantidad</th><th>Ubicación / Tamaño</th><th>Condición Final</th>
+</tr></thead>
+<tbody>
+<tr>
+<td contenteditable="true">Z1</td><td contenteditable="true">-</td>
+<td contenteditable="true">FISURA</td><td contenteditable="true">1</td>
+<td contenteditable="true">VER ANEXO</td><td contenteditable="true">RECHAZA</td>
+</tr>
+</tbody></table></div>
+</section>
+<!-- 5 -->
+<section class="section" id="sec-observaciones">
+<h2><span class="num"></span> Observaciones</h2>
+<div class="notes-simple" contenteditable="true">Anote aquí detalles generales, recomendaciones y acciones.</div>
+</section><div class="sig-table">
+<table>
+<tr><td class="sig-label">Nombre / Cargo</td><td class="sig-fill"><div class="sig-underline" contenteditable="true">Nombre completo — Cargo</div></td></tr>
+<tr><td class="sig-label">Fecha</td><td class="sig-fill"><div class="sig-underline" contenteditable="true">dd/mm/aaaa</div></td></tr>
+</table>
+</div>
+<!-- 6 -->
+<section class="section" id="sec-fotos">
+<h2><span class="num"></span> Anexo Fotográfico</h2>
+<div id="foto-groups"></div>
+</section>
+<!-- Firma final -->
+</div>
+<template id="tpl-foto-group">
+<div class="group">
+<div class="group-head">
+<div class="group-name" contenteditable="true">Nombre del componente</div>
+<div class="controls">
+<button class="btnPick" type="button">Cargar fotos</button>
+<input accept="image/*" capture="environment" class="picker" multiple="" type="file"/>
+</div>
+</div>
+<div class="gallery" style="--cols:2"></div>
+</div>
+</template>
 <script>
-function pad3(n){return String(n).padStart(3,'0');}
-function uid(){return 'id-'+Math.random().toString(36).slice(2,9);}
-function fileToDataURL(file){return new Promise(r=>{const fr=new FileReader();fr.onload=e=>r(e.target.result);fr.readAsDataURL(file);});}
+    // Fotos (drag & drop para ordenar)
+    const groupsWrap=document.getElementById('foto-groups');
+    const tplGroup=document.getElementById('tpl-foto-group');
 
-// N° automático (incrementa al imprimir/guardar PDF)
-(function(){try{const key='magnatest_seq';let n=parseInt(localStorage.getItem(key)||'0',10);document.getElementById('noVal').innerText=pad3(n+1);document.getElementById('bPrint').addEventListener('click',()=>{n++;localStorage.setItem(key,String(n));document.getElementById('noVal').innerText=pad3(n+1);window.print();});}catch(e){}})();
+    function enableDnD(card){
+      card.setAttribute('draggable','true');
+      card.addEventListener('dragstart', (e)=>{
+        e.dataTransfer.setData('text/plain','drag');
+        card.classList.add('dragging');
+      });
+      card.addEventListener('dragend', ()=> card.classList.remove('dragging'));
+    }
+    function bindGallery(gallery){
+      let overCard=null;
+      gallery.addEventListener('dragover', (e)=>{
+        e.preventDefault();
+        const dragging = gallery.querySelector('.dragging');
+        const cards = [...gallery.querySelectorAll('.photo:not(.dragging)')];
+        let nearest=null, minDist=1e9;
+        cards.forEach(c=>{
+          const r=c.getBoundingClientRect();
+          const cx=r.left+r.width/2, cy=r.top+r.height/2;
+          const d=(e.clientX-cx)**2 + (e.clientY-cy)**2;
+          if(d<minDist){minDist=d; nearest=c;}
+        });
+        cards.forEach(c=>c.classList.remove('drag-over'));
+        if(nearest){ nearest.classList.add('drag-over'); overCard=nearest; }
+      });
+      gallery.addEventListener('dragleave', ()=>{
+        gallery.querySelectorAll('.drag-over').forEach(c=>c.classList.remove('drag-over'));
+      });
+      gallery.addEventListener('drop', (e)=>{
+        e.preventDefault();
+        const dragging = gallery.querySelector('.dragging');
+        if(!dragging) return;
+        if(overCard){
+          gallery.insertBefore(dragging, overCard);
+          overCard.classList.remove('drag-over');
+          overCard=null;
+        } else {
+          gallery.appendChild(dragging);
+        }
+      });
+    }
 
-// Botones
-bPrint.onclick=()=>window.print();
-bZona.onclick=()=>{const r=document.createElement('div');r.className='row';r.innerHTML='<div contenteditable> </div><div contenteditable> </div>';zonasBody.appendChild(r);};
-bRes.onclick=()=>{const r=document.createElement('div');r.className='row';r.innerHTML='<div contenteditable> </div><div contenteditable> </div><div contenteditable> </div><div contenteditable> </div><div contenteditable> </div><div contenteditable> </div>';resBody.appendChild(r);};
-bFG.onclick=()=>addGroup({});
+    function bindGroup(group){
+      const gallery=group.querySelector('.gallery');
+      bindGallery(gallery);
+      const picker=group.querySelector('.picker');
+      group.querySelector('.btnPick').addEventListener('click',()=>picker.click());
+      const onFiles=(files)=>{
+        Array.from(files).forEach(file=>{
+          const r=new FileReader();
+          r.onload=e=>{
+            const card=document.createElement('div'); card.className='photo';
+            const img=document.createElement('img'); img.alt='foto'; img.src=e.target.result;
+            card.appendChild(img); enableDnD(card); gallery.appendChild(card);
+          };
+          r.readAsDataURL(file);
+        });
+      };
+      picker.addEventListener('change',(ev)=>{ onFiles(ev.target.files); ev.target.value=''; });
+    }
+    function addFotoGroup(){ const g=tplGroup.content.firstElementChild.cloneNode(true); groupsWrap.appendChild(g); bindGroup(g); }
+    addFotoGroup();
+    document.getElementById('btnAddFotos').addEventListener('click', addFotoGroup);
 
-const gTpl=document.getElementById('tplGroup'), iTpl=document.getElementById('tplItem');
-function addGroup(data){const n=gTpl.content.cloneNode(true);const g=n.querySelector('.fg');const list=n.querySelector('.list');const btn=n.querySelector('.addFoto');if(data.header) g.querySelector('header').innerText=data.header;(data.fotos||[]).forEach(f=>addItem(list,f));btn.onclick=()=>{const inp=document.createElement('input');inp.type='file';inp.accept='image/*';inp.capture='environment';inp.multiple=true;inp.onchange=()=>{Array.from(inp.files||[]).forEach(fl=>fileToDataURL(fl).then(b64=>addItem(list,{src:b64,caption:'Descripción / hallazgo'})));};inp.click();};fgs.appendChild(n);}
+    // +Zonas y +Resultados
+    function addZonaRow(){
+      const tbody=document.querySelector('#tabla-zonas tbody');
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td contenteditable="true"></td><td contenteditable="true"></td>';
+      tbody.appendChild(tr);
+    }
+    function addResultadoRow(){
+      const tbody=document.querySelector('#tabla-resultados tbody');
+      const tr=document.createElement('tr');
+      tr.innerHTML='<td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td>';
+      tbody.appendChild(tr);
+    }
+    document.getElementById('btnAddZonas').addEventListener('click', addZonaRow);
+    document.getElementById('btnAddResultados').addEventListener('click', addResultadoRow);
 
-function addItem(list,data){const n=iTpl.content.cloneNode(true);const it=n.querySelector('.item'),img=n.querySelector('img'),cap=n.querySelector('.cap'),del=n.querySelector('.btn-del');img.src=data.src;cap.innerText=data.caption||'Descripción / hallazgo';del.onclick=()=>it.remove();it.addEventListener('dragstart',e=>{it.classList.add('dragging');e.dataTransfer.setData('text/plain','');});it.addEventListener('dragend',e=>{it.classList.remove('dragging');list.querySelectorAll('.item').forEach(x=>x.classList.remove('drop-target'));});list.addEventListener('dragover',e=>{e.preventDefault();const dragging=list.querySelector('.item.dragging');if(!dragging)return;const after=Array.from(list.querySelectorAll('.item:not(.dragging)')).find(el=>{const r=el.getBoundingClientRect();return e.clientX<r.left+r.width/2;});list.querySelectorAll('.item').forEach(x=>x.classList.remove('drop-target'));if(after){after.classList.add('drop-target');list.insertBefore(dragging,after);}else{list.appendChild(dragging);}});list.appendChild(n);}
-
-// Guardar / Cargar
-bSave.onclick=()=>{const d=collect();try{localStorage.setItem('magnatest_cache',JSON.stringify(d));}catch(e){}const blob=new Blob([JSON.stringify(d,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='informe-magnatest.json';a.click();URL.revokeObjectURL(url);};
-bLoad.onclick=()=>fJson.click();fJson.onchange=()=>{if(!fJson.files[0])return;const r=new FileReader();r.onload=e=>{const d=JSON.parse(e.target.result);apply(d);try{localStorage.setItem('magnatest_cache',JSON.stringify(d));}catch(e){}};r.readAsText(fJson.files[0]);};
-
-function collect(){const grab=id=>{const out=[];document.getElementById(id).querySelectorAll('.row').forEach(r=>out.push({label:r.querySelector('.label')?r.querySelector('.label').innerText.trim():'',value:r.querySelector('.val')?r.querySelector('.val').innerText.trim():Array.from(r.children)[1]?.innerText.trim()||''}));return out;};const zonas=[];zonasBody.querySelectorAll('.row').forEach(r=>zonas.push({comp:r.children[0].innerText.trim(),desc:r.children[1].innerText.trim()}));const resultados=[];resBody.querySelectorAll('.row').forEach(r=>resultados.push({pieza:r.children[0].innerText.trim(),sin:r.children[1].innerText.trim(),tipo:r.children[2].innerText.trim(),cant:r.children[3].innerText.trim(),ubic:r.children[4].innerText.trim(),cond:r.children[5].innerText.trim()}));const fotos=[];document.querySelectorAll('#fgs .fg').forEach(g=>{const gg={header:g.querySelector('header').innerText.trim(),fotos:[]};g.querySelectorAll('.item').forEach(it=>gg.fotos.push({src:it.querySelector('img').src,caption:it.querySelector('.cap').innerText.trim()}));fotos.push(gg);});return{hdr:{fecha:hdrFecha.innerText.trim(),nro:document.getElementById('noVal').innerText.trim()},antecedentes:grab('ant'),tecnica:grab('tec'),zonas,resultados,observaciones:obs.innerText.trim(),firmas:{nombreCargo:document.querySelector('#sig .row:nth-child(1) .val').innerText.trim(),fecha:document.querySelector('#sig .row:nth-child(2) .val').innerText.trim()},fotos};}
-function apply(d){hdrFecha.innerText=d.hdr?.fecha||'';document.getElementById('noVal').innerText=d.hdr?.nro||document.getElementById('noVal').innerText;const fill=(id,rows)=>{const rs=document.getElementById(id).querySelectorAll('.row');rs.forEach((r,i)=>{const v=r.querySelector('.val');if(rows[i]&&v)v.innerText=rows[i].value||'';});};if(d.antecedentes)fill('ant',d.antecedentes);if(d.tecnica)fill('tec',d.tecnica);zonasBody.innerHTML='';(d.zonas||[]).forEach(z=>{const r=document.createElement('div');r.className='row';r.innerHTML='<div contenteditable>'+z.comp+'</div><div contenteditable>'+z.desc+'</div>';zonasBody.appendChild(r);});resBody.innerHTML='';(d.resultados||[]).forEach(x=>{const r=document.createElement('div');r.className='row';r.innerHTML='<div contenteditable>'+x.pieza+'</div><div contenteditable>'+x.sin+'</div><div contenteditable>'+x.tipo+'</div><div contenteditable>'+x.cant+'</div><div contenteditable>'+x.ubic+'</div><div contenteditable>'+x.cond+'</div>';resBody.appendChild(r);});obs.innerText=d.observaciones||'';document.querySelector('#sig .row:nth-child(1) .val').innerText=d.firmas?.nombreCargo||document.querySelector('#sig .row:nth-child(1) .val').innerText;document.querySelector('#sig .row:nth-child(2) .val').innerText=d.firmas?.fecha||document.querySelector('#sig .row:nth-child(2) .val').innerText;fgs.innerHTML='';(d.fotos||[]).forEach(g=>{addGroup({header:g.header,fotos:g.fotos});});}
-
-// Restaurar
-(function(){try{const c=localStorage.getItem('magnatest_cache');if(c){apply(JSON.parse(c));return;}}catch(e){} addGroup({});})();
-// SW
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js');}
-</script></body></html>
+    // Guardar / Cargar
+    const sheet=document.getElementById('sheet');
+    const btnSave=document.getElementById('btnSave'), btnLoad=document.getElementById('btnLoad'), fileLoader=document.getElementById('fileLoader');
+    function getState(){ return {version:'sections-final-v31', saved_at:new Date().toISOString(), html:sheet.innerHTML}; }
+    function download(name,text){ const blob=new Blob([text],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=name; a.click(); URL.revokeObjectURL(url); }
+    function saveToFile(){ const s=getState(); const stamp=new Date().toISOString().replace(/[:.]/g,'-').slice(0,19); download('informe_magnatest_'+stamp+'.mgt.json', JSON.stringify(s)); }
+    function restoreState(s){ if(!s||!s.html) return; sheet.innerHTML=s.html;
+      // rebind galleries for drag & drop
+      sheet.querySelectorAll('#sec-fotos .gallery').forEach(bindGallery);
+      sheet.querySelectorAll('#sec-fotos .photo').forEach(enableDnD);
+      // re-enlazar botones
+      document.getElementById('btnAddFotos').addEventListener('click', addFotoGroup);
+      document.getElementById('btnAddZonas').addEventListener('click', addZonaRow);
+      document.getElementById('btnAddResultados').addEventListener('click', addResultadoRow);
+    }
+    btnSave.addEventListener('click',saveToFile);
+    btnLoad.addEventListener('click',()=>fileLoader.click());
+    fileLoader.addEventListener('change',(ev)=>{ const f=ev.target.files[0]; if(!f) return;
+      const r=new FileReader(); r.onload=e=>{ try{ restoreState(JSON.parse(e.target.result)); }catch(err){ alert('Archivo inválido'); } };
+      r.readAsText(f); ev.target.value=''; });
+  </script>
+<!-- mgt v35 js -->
+<script>
+(function(){
+  function qualifyPhotoCard(node){
+    if (!node) return null;
+    // base element to decorate is the first ancestor that holds the img
+    var card = node.closest('.mgt-photo, .mgt-photo-card, .photo-card, .photo, .gallery-item, .evidence-photo, .evidence .item, figure');
+    if (!card) card = node.parentElement;
+    if (!card) return null;
+    card.classList.add('mgt-photo-card');
+    if (!card.querySelector('.mgt-remove')){
+      var b = document.createElement('button');
+      b.className = 'mgt-remove'; b.textContent = '🗑';
+      b.title = 'Eliminar';
+      card.appendChild(b);
+    }
+    return card;
+  }
+  function decorateAll(){
+    document.querySelectorAll('img').forEach(function(img){
+      // solo evidencias: ignora el logo y otros iconos
+      var src = img.getAttribute('src')||'';
+      if (/logo|icon|magnatest|mgt/i.test(src)) return;
+      qualifyPhotoCard(img);
+    });
+  }
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.mgt-remove'); if(!btn) return;
+    var card = btn.closest('.mgt-photo-card'); if(!card) return;
+    // intenta identificar sección/ID si existen
+    var section = card.closest('[data-section-id]'); 
+    var img = card.querySelector('img');
+    var src = img ? img.currentSrc || img.src : '';
+    card.remove();
+    try{
+      var st = (window.MGT_STATE = JSON.parse(localStorage.getItem('mgt_state')||'{}'));
+      // Limpieza aproximada: elimina por src
+      if(st.photosBySection){
+        Object.keys(st.photosBySection).forEach(function(k){
+          st.photosBySection[k] = (st.photosBySection[k]||[]).filter(function(p){
+            return (p && p.src) ? p.src !== src : true;
+          });
+        });
+      }
+      localStorage.setItem('mgt_state', JSON.stringify(st));
+    }catch(err){ console.warn('No se pudo sincronizar la eliminación en storage:', err); }
+  });
+  // Bootstrap + observar cambios (cuando se agregan fotos nuevas)
+  document.addEventListener('DOMContentLoaded', function(){
+    decorateAll();
+    var mo = new MutationObserver(function(muts){
+      muts.forEach(function(m){
+        m.addedNodes && m.addedNodes.forEach(function(n){
+          if (n.nodeType === 1){
+            if (n.matches('img')) qualifyPhotoCard(n);
+            n.querySelectorAll && n.querySelectorAll('img').forEach(qualifyPhotoCard);
+          }
+        });
+      });
+    });
+    mo.observe(document.body, {childList:true, subtree:true});
+    window.mgtRefreshPhotoButtons = decorateAll;
+  });
+})();
+</script>
+</body>
+</html>
