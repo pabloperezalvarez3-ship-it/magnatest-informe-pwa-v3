@@ -20,12 +20,93 @@
     .logo{width:34mm}
     #sec-antecedentes{margin-top:14mm}
 
-    .header{text-align:center;margin:0 auto 10mm}
-    .h-title{font-size:22px;font-weight:800;letter-spacing:.3px;text-transform:uppercase}
-    .h-sub{color:#6b7280;font-size:12px}
+   .header{text-align:center;margin:0 auto -12mm}
+.header{
+  margin-top:-4mm; /* sube un poco todo el encabezado */
+}
+
+/* === Bloque de títulos === */
+.h-title{
+  font-size:22px;
+  font-weight:800;
+  letter-spacing:.3px;
+  text-transform:uppercase;
+}
+.h-sub2{
+  font-size:14px;
+  font-weight:700;
+  color:#0f3e79;
+  margin-top:0px;
+  letter-spacing:0.5px;
+}
+.h-sub{
+  color:#6b7280;
+  font-size:12px;
+}
+/* Línea decorativa bajo el encabezado principal */
+.header-rule{
+  width:150mm;                     /* largo visual de la línea */
+  position: relative;              /* permite moverla hacia arriba o abajo */
+  top:6mm;                        /* súbela un poco, ajusta entre -2 y -5mm */
+  margin:0 auto;                   /* centrado */
+  border-top:3.5px solid #aebcd6;  /* color gris-azulado suave */
+  opacity:0.9;
+}
+
+/* Asegurar que también se imprima en PDF */
+/* @media print{
+  *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .header-rule{
+    position: relative !important;
+    top:-2mm !important;
+    width:150mm !important;
+    margin:0 auto !important;
+    border-top:1.5px solid #aebcd6 !important;
+    opacity:0.9 !important;
+  }
+} */
+/* === Ajuste fino: subir solo el texto del encabezado === */
+.h-title, .h-sub2, .h-sub{
+  position:relative;
+  top:-7.5mm; /* si quieres más arriba: -4mm; si muy arriba: -2mm */
+}
+.h-sub{color:#6b7280;font-size:12px}
 
     .section{margin-bottom:9mm;break-inside:avoid;counter-increment:sec}
     .section h2{display:flex;align-items:center;gap:10px;font-size:18px;margin:0 0 6mm 0;break-after:avoid}
+
+    /* Empuja hacia abajo la sección 4 (Resultados obtenidos) */
+#sec-resultados{
+  padding-top: 0mm; /* AJUSTA ESTE VALOR a tu gusto: p.ej. 12mm, 18mm, 24mm */
+}
+@media print{
+  *{
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+/* En PDF, asegura el mismo desplazamiento */
+@media print{
+  #sec-resultados{
+    padding-top: 37mm !important; /* el mismo valor que arriba */
+  }
+}
+/* Empuja hacia abajo la sección 6 (Anexo Fotográfico) */
+#sec-fotos{
+  padding-top: 0mm;         /* AJUSTA A TU GUSTO: 18, 22, 26, 30mm... */
+}
+
+@media print{
+  #sec-fotos{
+    padding-top: 26.5mm !important;  /* usa el MISMO valor que arriba */
+  }
+}
+@media print{
+  #sec-fotos{
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+}
     .num{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:6px;background:#e6efff;color:#113c88;font-weight:800}
     .num::after{content:counter(sec)}
 
@@ -72,7 +153,65 @@
       #sec-fotos .group + .group{break-before:page}
       .photo{border:2px solid var(--soft);box-shadow:0 0 0 4px #f6f9ff inset} /* mantener borde tenue también en PDF */
     }
-  
+  /* === Repetir el encabezado en TODAS las hojas (solo impresión) === */
+@media print {
+
+  /* 1) Encabezado fijo (se copia en cada página) */
+  header.header{
+    position: fixed !important;
+    top: 6mm !important;        /* ← con unidad */
+    left: 0; right: 0;
+    z-index: 1000;
+    background:#fff;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* 2) Línea decorativa fija (la que quieres mover) */
+  @media print{
+  /* la línea es HERMANA del header, no hija */
+  .header + .header-rule{
+    content:"" !important;
+    display:block !important;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    top: 22mm !important;          /* ← ahora SÍ sube/baja */
+    width: 150mm !important;
+    margin: 0 auto !important;
+    border-top: 3px solid #aebcd6 !important;
+    background: transparent !important;
+    z-index: 3000 !important;
+    opacity: .9 !important;
+    height: 0 !important;
+  }
+}
+
+  /* 3) Logo fijo también */
+  .logo-wrap{
+    position: fixed !important;
+    top: -2mm !important;        /* ajusta fino */
+    left: 3.5mm !important;       /* ajusta fino */
+    z-index: 1500 !important;
+  }
+  .logo-wrap img{
+    height: 15mm !important;
+    width: auto !important;
+    display: block !important;
+  }
+
+@media print{
+  .header-spacer{
+    display: block !important;
+    height: 16mm !important;   /* sube/baja el H2 (33–38 mm aprox.) */
+  }
+}
+
+/* En pantalla, no necesitamos el spacer */
+@media screen{
+  .header-spacer{ display:none !important; }
+}
+
 /* === Precise logo placement for PRINT === */
 :root{
   --pm-top: 8mm;
@@ -89,9 +228,16 @@
   .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
 }
 
-
-#report-no{position:absolute; right:24px; top:10px; font-weight:600; font-size:14px; opacity:.6;}
-@media print{#report-no{position:absolute; right:24px; top:78px;}}
+/* PDF — posición para impresión */
+@media print{
+  #report-no{
+    position: absolute !important;
+    right: 20mm !important;
+    top:   -3mm !important;
+    z-index: 10;
+    opacity: .6;
+  }
+}
 </style>
 <!-- mgt v35 css -->
 <style>
@@ -104,8 +250,60 @@ header, .header, .page-header { position: relative; }
 @media print {
   .sig-table{ page-break-before: always; break-inside: avoid; margin-top: 8mm; }
 }
+/* Ajuste de espacio entre la firma y el Anexo Fotográfico */
+#sec-fotos {
+  margin-top: 40px !important;
+}
+@media print {
+  #sec-fotos { margin-top: 40px !important; }
+}
+/* Fijar anclaje del número en impresión */
+@media print {
+  header, .report-header, .title-wrap { position: relative !important; }
+  #report-no{
+    position: absolute !important;
+    right: 20mm !important;  /* mueve horizontal en PDF */
+    top: -7mm !important;    /* SUBE/BAJA en PDF: menos = sube, más = baja */
+    z-index: 10;
+    opacity: .6;             /* mismo look suave */
+  }
+}
 
+/* ===== PATCH: numeración y saltos de página ===== */
 
+/* A) “Pag X de Y” debajo de n° 001 (solo impresión) */
+#page-no{ display:none; }
+
+@media print{
+  header, .report-header, .title-wrap { position: relative !important; }
+  #page-no{
+    display:block !important;
+    position:absolute !important;
+    right: 20mm !important;
+    top:   3mm !important;
+    font-weight: 600;
+    font-size: 12px;
+    opacity: .6;
+    z-index: 10;
+  }
+  #page-no::after{
+    content: "Pag " counter(page) " de " counter(pages);
+  }
+}
+
+/* B) Observaciones + Firma juntas y Anexo en hoja nueva (solo impresión) */
+@media print{
+  .sig-table{
+    page-break-before: auto !important;
+    break-inside: avoid !important;
+    margin-top: 8mm;
+  }
+  #sec-fotos{
+    break-before: page !important;
+    page-break-before: always !important;
+  }
+}
+/* ===== /PATCH ===== */
 /* === Logo bien esquinado en pantalla e impresión === */
 :root{ --page-margin: 10mm; --logo-nudge-y: -1mm; --logo-nudge-x: -1mm; }
 @media print {
@@ -147,7 +345,11 @@ header, .header, .page-header { position: relative; }
   .brand{position:absolute !important; top:14px !important; left:20px !important; z-index:1000;}
   .brand img{ display:block !important; max-height: 28mm !important; height:auto !important; width:auto !important; }
 }
-
+@media print{
+  .h-title, .h-sub2, .h-sub{
+    top: -3mm !important; /* Sube ligeramente los textos del encabezado en PDF */
+  }
+}
 </style>
 <link href="./icons/apple-touch-icon.png" rel="apple-touch-icon"/>
 <style id="mgt-fixes-v8">
@@ -164,12 +366,14 @@ header, .header, .page-header { position: relative; }
 }
   @page { size:A4; margin: var(--mgt-page-margin); }
   /* Fijar el MISMO logo del header */
+@media screen{
   .logo-wrap, .brand{
     position: absolute !important;
     top:  calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-y)) !important;
-    left: calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-x)) !important; /* <-- aquí */
+    left: calc(var(--mgt-page-margin) + var(--mgt-logo-nudge-x)) !important;
     z-index: 9999 !important;
   }
+}
   .logo-wrap img, .brand img{
     height: var(--mgt-logo-size) !important;
     width: auto !important;
@@ -220,8 +424,17 @@ header, .header, .page-header { position: relative; }
 <div class="logo-wrap"><img alt="MAGNATEST" class="logo" src="icons/logo-magnatest.png"/></div>
 <header class="header" style="position:relative">
 <div class="h-title">INFORME DE INSPECCIÓN</div>
+<div class="h-sub2">PARTÍCULAS MAGNÉTICAS</div>
 <div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
-<div id="report-no">n° 001</div></header>
+<div id="report-no"
+     style="position:absolute; right:10mm; top:-4mm; left:auto; width:auto;
+            display:inline-block; text-align:right; z-index:20; opacity:.6;">
+  n° 001
+</div>
+<div id="page-no"></div>
+</header>
+<div class="header-rule" aria-hidden="true"></div>
+<div class="header-spacer"></div>
 <!-- 1 -->
 <section class="section" id="sec-antecedentes">
 <h2><span class="num"></span> Antecedentes</h2>
