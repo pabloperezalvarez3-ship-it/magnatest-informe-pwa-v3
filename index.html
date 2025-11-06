@@ -686,5 +686,39 @@ header, .header, .page-header { position: relative; }
   });
 })();
 </script>
+<script>
+// === Numeración automática (localStorage) ===
+(function(){
+  const key = "mgt_report_seq";
+  const node = document.getElementById("report-no");
+  const pad = n => String(n).padStart(3,"0");
+  const render = (n) => { if(node) node.textContent = "n° " + pad(n); };
+  const getSeq = () => {
+    const raw = Number(localStorage.getItem(key));
+    return Number.isFinite(raw) && raw > 0 ? raw : 1;
+  };
+  const bump = () => {
+    let n = getSeq() + 1;
+    localStorage.setItem(key, String(n));
+    return n;
+  };
+  // pinta el número actual al cargar
+  render(getSeq());
+  // después de imprimir (cuando cierras el diálogo), aumenta correlativo
+  window.addEventListener("afterprint", ()=> render(bump()));
+  // al Guardar, también aumenta correlativo
+  const btnSave = document.getElementById("btnSave");
+  if (btnSave) btnSave.addEventListener("click", ()=> { render(bump()); });
+})();
+
+// === Registrar Service Worker para modo offline ===
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js")
+      .then(reg => console.log("SW registrado:", reg.scope))
+      .catch(err => console.warn("SW error:", err));
+  });
+}
+</script>
 </body>
 </html>
