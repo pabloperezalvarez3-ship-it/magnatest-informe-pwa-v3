@@ -11,12 +11,34 @@
     :root{--a4-w:210mm;--a4-h:297mm;--ink:#111827;--border:#e5e7eb;--bg:#ffffff;--head:#204aa0;--soft:#cfe2ff}
     html,body{height:100%}
     body{margin:0;background:#0f172a;color:var(--ink);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    .toolbar{position:sticky;top:0;z-index:10;max-width:var(--a4-w);margin:0 auto;padding:10px 8px;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;background:#0f172a}
-    .btn{border:1px solid #334155;background:#1f2937;color:#e5e7eb;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
+.toolbar{
+  position: sticky;
+  top: 0px;                /* 🔹 baja un poco la barra, ajústalo a gusto (0–20px) */
+  z-index: 1000;
+  max-width: calc(var(--a4-w) - 40mm);  /* 🔹 reduce el ancho total (centrado visual) */
+  margin: 0 auto;           /* la mantiene centrada horizontalmente */
+  padding: 10px 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;  /* 🔹 centra los botones dentro de la barra */
+  background:#0f172a;
+  border-radius: 12px;      /* 🔹 opcional: bordes suaves como en tu ejemplo */
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+}  
+.toolbar + .sheet{
+  margin-top: 14mm;   /* prueba 12–16mm según se vea en tu pantalla */
+}
+.btn{border:1px solid #334155;background:#1f2937;color:#e5e7eb;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
     input[type="file"]{display:none!important}
 
     .sheet{counter-reset:sec;width:var(--a4-w);min-height:var(--a4-h);margin:12px auto 24px;background:var(--bg);box-shadow:0 10px 30px rgba(0,0,0,.35);border-radius:10px;padding:18mm 16mm;box-sizing:border-box;position:relative}
-    .logo-wrap{position:absolute;top:6mm;left:10mm}
+.logo-wrap{
+  position: absolute;
+  top: 20mm;   /* ✅ baja un poquito más */
+  left: 10mm;
+  z-index: 5;  /* ✅ sube a 5 para que quede sobre la hoja, pero debajo de la barra */
+}
     .logo{width:34mm}
     #sec-antecedentes{margin-top:14mm}
 
@@ -45,26 +67,39 @@
 }
 /* Línea decorativa bajo el encabezado principal */
 .header-rule{
-  width:150mm;                     /* largo visual de la línea */
+  width:120mm;                     /* largo visual de la línea */
   position: relative;              /* permite moverla hacia arriba o abajo */
   top:6mm;                        /* súbela un poco, ajusta entre -2 y -5mm */
   margin:0 auto;                   /* centrado */
   border-top:3.5px solid #aebcd6;  /* color gris-azulado suave */
   opacity:0.9;
 }
+/* Pantalla: badge tenue para el correlativo */
+#report-no{
+  border:1.5px solid #cfe0ff;
+  background:#f5f9ff;
+  color:#3a5c8b;
+  padding:4px 10px;
+  border-radius:12px;
+  line-height:1;
+  box-shadow:0 0 0 4px rgba(207, 224, 255, 0.208) inset;
+}
 
-/* Asegurar que también se imprima en PDF */
-/* @media print{
-  *{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .header-rule{
-    position: relative !important;
-    top:-2mm !important;
-    width:150mm !important;
-    margin:0 auto !important;
-    border-top:1.5px solid #aebcd6 !important;
-    opacity:0.9 !important;
+/* Impresión: mismo look y posición */
+@media print{
+  #report-no{
+    position:absolute !important;
+    right:20mm !important;
+    top:-6mm !important;
+    border:1px solid #cfe0ff !important;
+    background:#f8fbff !important;
+    box-shadow:none !important; /* más limpio en PDF */
+    padding:3px 8px !important;
+    border-radius:10px !important;
+    opacity:.75;
   }
-} */
+}
+
 /* === Ajuste fino: subir solo el texto del encabezado === */
 .h-title, .h-sub2, .h-sub{
   position:relative;
@@ -147,6 +182,7 @@
 
     @page{size:A4;margin:12mm 10mm}
     @media print{
+      
       .toolbar,.controls{display:none!important}
       body{background:#fff}
       .sheet{margin:0;box-shadow:none;border-radius:0;padding:0}
@@ -177,7 +213,7 @@
     left: 0 !important;
     right: 0 !important;
     top: 22mm !important;          /* ← ahora SÍ sube/baja */
-    width: 150mm !important;
+    width: 140mm !important;
     margin: 0 auto !important;
     border-top: 3px solid #aebcd6 !important;
     background: transparent !important;
@@ -191,7 +227,7 @@
   .logo-wrap{
     position: fixed !important;
     top: -2mm !important;        /* ajusta fino */
-    left: 3.5mm !important;       /* ajusta fino */
+    left: 0mm !important;       /* ajusta fino */
     z-index: 1500 !important;
   }
   .logo-wrap img{
@@ -263,7 +299,7 @@ header, .header, .page-header { position: relative; }
   #report-no{
     position: absolute !important;
     right: 20mm !important;  /* mueve horizontal en PDF */
-    top: -7mm !important;    /* SUBE/BAJA en PDF: menos = sube, más = baja */
+    top: -3mm !important;    /* SUBE/BAJA en PDF: menos = sube, más = baja */
     z-index: 10;
     opacity: .6;             /* mismo look suave */
   }
@@ -271,25 +307,7 @@ header, .header, .page-header { position: relative; }
 
 /* ===== PATCH: numeración y saltos de página ===== */
 
-/* A) “Pag X de Y” debajo de n° 001 (solo impresión) */
-#page-no{ display:none; }
 
-@media print{
-  header, .report-header, .title-wrap { position: relative !important; }
-  #page-no{
-    display:block !important;
-    position:absolute !important;
-    right: 20mm !important;
-    top:   3mm !important;
-    font-weight: 600;
-    font-size: 12px;
-    opacity: .6;
-    z-index: 10;
-  }
-  #page-no::after{
-    content: "Pag " counter(page) " de " counter(pages);
-  }
-}
 
 /* B) Observaciones + Firma juntas y Anexo en hoja nueva (solo impresión) */
 @media print{
@@ -357,7 +375,7 @@ header, .header, .page-header { position: relative; }
   --mgt-page-margin: 10mm;   /* margen PDF */
   --mgt-logo-size: 15mm;     /* altura del logo */
   --mgt-logo-nudge-y: -12mm; /* ajuste vertical (negativo = subir) */
-  --mgt-logo-nudge-x: -6mm;   /* NUEVO: horizontal; negativo = más a la izquierda */
+  --mgt-logo-nudge-x: -0mm;   /* NUEVO: horizontal; negativo = más a la izquierda */
   --mgt-content-top-pad: 0mm;/* si ves superposición, aumenta un poco (p.ej., 2mm) */
   --mgt-content-top-pad: 7mm;   /* o 3–4mm si lo quieres más abajo */
 }
@@ -408,6 +426,13 @@ header, .header, .page-header { position: relative; }
   @media print{
     body{ background: #fff !important; }
   }
+  /* === PATCH: bajar logo en pantalla (debajo de la barra) === */
+@media screen{
+  .logo-wrap{
+    top: 0mm !important;     /* puedes probar 20–24 mm para ajustar */
+    z-index: 5 !important;    /* mantiene el logo visible debajo de la barra */
+  }
+}
   </style>
 </head>
 <body>
@@ -421,17 +446,17 @@ header, .header, .page-header { position: relative; }
 <input accept="application/json" id="fileLoader" type="file"/>
 </div>
 <div class="sheet" id="sheet">
-<div class="logo-wrap"><img alt="MAGNATEST" class="logo" src="icons/logo-magnatest.png"/></div>
+<div class="logo-wrap">
+  <img alt="MAGNATEST" class="logo" src="icons/logo-magnatest.png"/></div>
 <header class="header" style="position:relative">
 <div class="h-title">INFORME DE INSPECCIÓN</div>
 <div class="h-sub2">PARTÍCULAS MAGNÉTICAS</div>
 <div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
 <div id="report-no"
-     style="position:absolute; right:10mm; top:-4mm; left:auto; width:auto;
+     style="position:absolute; right:10mm; top:0mm; left:auto; width:auto;
             display:inline-block; text-align:right; z-index:20; opacity:.6;">
   n° 001
 </div>
-<div id="page-no"></div>
 </header>
 <div class="header-rule" aria-hidden="true"></div>
 <div class="header-spacer"></div>
