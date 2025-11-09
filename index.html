@@ -29,6 +29,41 @@
 .toolbar + .sheet{
   margin-top: 14mm;   /* prueba 12–16mm según se vea en tu pantalla */
 }
+/* === ALINEAR BARRA CON CONTENIDO Y FIJAR ESPACIADOS EN PANTALLA === */
+
+/* 1) Ancho interno de la hoja (padding lateral de .sheet = 16mm) */
+:root{
+  --pad-x: 16mm;   /* padding horizontal de .sheet */
+}
+
+/* 2) Ajustes solo para PANTALLA (no afecta impresión) */
+@media screen{
+
+  /* La barra mide exactamente lo mismo que el contenido útil de la hoja */
+  .toolbar{
+    max-width: calc(var(--a4-w) - 2*var(--pad-x)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  /* Separación vertical bajo la barra; estable entre notebook y tablet */
+  .toolbar + .sheet{
+    /* ajusta el medio si lo ves muy arriba/abajo: 6.5–8.5vh suele ir perfecto */
+    margin-top: clamp(44px, 0vh, 88px) !important;
+  }
+
+  /* El logo queda siempre bajo la barra y alineado a la izquierda */
+  .logo-wrap{
+    left: 10mm !important;
+    top: clamp(14mm, 4.5vh, 22mm) !important;
+    z-index: 5 !important;
+  }
+
+  /* La línea decorativa bajo el título iguala el ancho del contenido */
+  .header + .header-rule{
+    width: calc(var(--a4-w) - 2*var(--pad-x)) !important;
+  }
+}
 .btn{border:1px solid #334155;background:#1f2937;color:#e5e7eb;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:700}
     input[type="file"]{display:none!important}
 
@@ -269,7 +304,7 @@
   #report-no{
     position: absolute !important;
     right: 20mm !important;
-    top:   -3mm !important;
+    top:   -5mm !important;
     z-index: 10;
     opacity: .6;
   }
@@ -377,7 +412,7 @@ header, .header, .page-header { position: relative; }
   --mgt-logo-nudge-y: -12mm; /* ajuste vertical (negativo = subir) */
   --mgt-logo-nudge-x: -0mm;   /* NUEVO: horizontal; negativo = más a la izquierda */
   --mgt-content-top-pad: 0mm;/* si ves superposición, aumenta un poco (p.ej., 2mm) */
-  --mgt-content-top-pad: 7mm;   /* o 3–4mm si lo quieres más abajo */
+  --mgt-content-top-pad: 0mm;   /* o 3–4mm si lo quieres más abajo */
 }
 @media print {
     header .subtitle { display: none !important; }
@@ -429,7 +464,7 @@ header, .header, .page-header { position: relative; }
   /* === PATCH: bajar logo en pantalla (debajo de la barra) === */
 @media screen{
   .logo-wrap{
-    top: 0mm !important;     /* puedes probar 20–24 mm para ajustar */
+    top: -12mm !important;     /* puedes probar 20–24 mm para ajustar */
     z-index: 5 !important;    /* mantiene el logo visible debajo de la barra */
   }
 }
@@ -453,7 +488,7 @@ header, .header, .page-header { position: relative; }
 <div class="h-sub2">PARTÍCULAS MAGNÉTICAS</div>
 <div class="h-sub">Proyecto / Equipo / Fecha – Complete los campos en las tablas.</div>
 <div id="report-no"
-     style="position:absolute; right:10mm; top:0mm; left:auto; width:auto;
+     style="position:absolute; right:10mm; top:-5mm; left:auto; width:auto;
             display:inline-block; text-align:right; z-index:20; opacity:.6;">
   n° 001
 </div>
