@@ -1,0 +1,488 @@
+:root {
+    --a4-w: 210mm;
+    --a4-h: 297mm;
+    --ink: #111827;
+    --border: #e5e7eb;
+    --bg: #ffffff;
+    --head: #204aa0;
+    --soft: #cfe2ff;
+    --pad-x: 20mm;
+    --pm-top: 8mm;
+    --pm-left: 10mm;
+    --logo-nudge-x: -2mm;
+    --logo-nudge-y: -2mm;
+    --page-margin: 10mm;
+    --logo-nudge-y: -1mm;
+    --logo-nudge-x: -1mm;
+    --pm-top: 8mm;
+    --pm-left: 10mm;
+    --logo-nudge-x: -2mm;
+    --logo-nudge-y: -2mm;
+    --mgt-page-margin: 18mm 10mm 12mm 10mm;
+    --mgt-logo-size: 15mm;
+    --mgt-logo-nudge-y: -12mm;
+    --mgt-logo-nudge-x: -0mm;
+    --mgt-content-top-pad: 0mm;
+    --mgt-content-top-pad: 0mm;
+}
+
+html,
+body {
+    height: 100%
+}
+
+body {
+    margin: 0;
+    color: var(--ink);
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial
+}
+
+.header {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    /* izquierda | centro | derecha */
+    align-items: center;
+    width: var(--a4-w);
+    position: relative;
+    margin: -30px auto 24px;
+    padding-top: 30px;
+}
+
+
+/* contador de secciones */
+
+.section {
+    margin-bottom: 9mm;
+    break-inside: avoid;
+    counter-increment: sec;
+}
+
+.section h2 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    margin: 0 0 6mm 0;
+    break-after: avoid
+}
+
+
+/* HEADER */
+
+
+/* Izquierda */
+
+.logo {
+    max-height: 80px;
+}
+
+
+/* Centro */
+
+.header-center {
+    text-align: center;
+}
+
+
+/* Derecha */
+
+.logo-info {
+    text-align: center;
+    margin-left: -22mm;
+}
+
+
+/* hoja  */
+
+.sheet {
+    counter-reset: sec;
+    width: var(--a4-w);
+    min-height: var(--a4-h);
+    margin: 12px auto 24px;
+    background: var(--bg);
+    border-radius: 10px;
+    padding: 3mm 16mm;
+    box-sizing: border-box;
+    position: relative
+}
+
+
+/* toolbar */
+
+.toolbar {
+    position: sticky;
+    top: 0px;
+    /* 🔹 baja un poco la barra, ajústalo a gusto (0–20px) */
+    z-index: 1000;
+    max-width: calc(var(--a4-w));
+    /* 🔹 reduce el ancho total (centrado visual) */
+    margin: 0 auto;
+    /* la mantiene centrada horizontalmente */
+    padding: 10px 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    /* 🔹 centra los botones dentro de la barra */
+    background: #0f172a;
+    border-radius: 12px;
+    /* 🔹 opcional: bordes suaves como en tu ejemplo */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .3);
+}
+
+.num {
+    display: inline-grid;
+    place-items: center;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: #e6efff;
+    color: #113c88;
+    font-weight: 800
+}
+
+.num::after {
+    content: counter(sec)
+}
+
+
+/* botones */
+
+.btn,
+#fileLoader {
+    border: 1px solid #334155;
+    background: #1f2937;
+    color: #e5e7eb;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 700
+}
+
+input[type="file"] {
+    display: none !important
+}
+
+
+/* tabla */
+
+.table-wrap {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 13px
+}
+
+thead th {
+    background: var(--head);
+    color: #fff;
+    text-align: left;
+    padding: 10px 8px;
+    font-weight: 700
+}
+
+tbody td {
+    border-top: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 9px 8px;
+    vertical-align: top;
+    background: #fff
+}
+
+tbody td:last-child {
+    border-right: none
+}
+
+[contenteditable="true"] {
+    outline: none
+}
+
+[contenteditable="true"]:focus {
+    box-shadow: inset 0 0 0 2px #d6e7fb;
+    background: #f8fbff
+}
+
+#tabla-resultados tbody td {
+    text-align: center;
+}
+
+#tabla-resultados tbody td:first-child {
+    text-align: center;
+}
+
+.sig-table {
+    width: 70%;
+    margin: 12mm auto 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.sig-table table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.sig-table td {
+    border-top: 1px solid var(--border);
+    padding: 10px;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+.sig-table tr:first-child td {
+    border-top: none;
+}
+
+.sig-label {
+    width: 38%;
+    background: #eef5ff;
+    font-weight: 700;
+    color: #0f3e79;
+}
+
+.sig-fill {
+    background: #fff;
+}
+
+.sig-underline {
+    border-bottom: 1.5px solid #9ec3ff;
+    height: 24px;
+}
+
+.notes-simple {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-height: 35mm;
+    padding: 10px;
+    background: #fff
+}
+
+
+/* numero de asignacion de informe */
+
+#report-no {
+    position: absolute;
+    right: 0mm;
+    top: 13mm;
+    left: auto;
+    width: auto;
+    display: inline-block;
+    text-align: right;
+    z-index: 20;
+    opacity: .6;
+    border: 1.5px solid #cfe0ff;
+    background: #f5f9ff;
+    color: #3a5c8b;
+    padding: 4px 10px;
+    border-radius: 12px;
+    line-height: 1;
+    box-shadow: 0 0 0 4px rgba(207, 224, 255, 0.208) inset;
+}
+
+
+/* espaciado entre anexo fotografico y observaciones  */
+
+#sec-fotos {
+    margin-top: 10mm;
+}
+
+
+/* Línea decorativa bajo el encabezado principal */
+
+.header-rule {
+    width: 120mm;
+    position: relative;
+    top: -10mm;
+    left: 10mm;
+    margin: 0 auto;
+    border-top: 3.5px solid #aebcd6;
+    opacity: 0.9;
+}
+
+
+/* texto: Proyecto / Equipo / Fecha – Complete los campos en las tablas. */
+
+.h-sub {
+    color: #6b7280;
+    font-size: 12px
+}
+
+
+/* texto : PARTÍCULAS MAGNÉTICAS */
+
+.h-sub2 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f3e79;
+    margin-top: 0px;
+    letter-spacing: 0.5px;
+}
+
+.h-title {
+    font-size: 18px;
+    font-weight: 800;
+    letter-spacing: .3px;
+    text-transform: uppercase;
+}
+
+
+/* fotos de la galeria */
+
+.group {
+    margin: 8mm 0 10mm
+}
+
+.group-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px
+}
+
+.group-name {
+    display: inline-block;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: #eef5ff;
+    color: #0f3e79;
+    font-weight: 700;
+    min-width: 46mm;
+    max-width: 100mm
+}
+
+.gallery {
+    --cols: 2;
+    --gap: 10px;
+    display: grid;
+    grid-template-columns: repeat(var(--cols), 1fr);
+    gap: var(--gap)
+}
+
+.photo {
+    position: relative;
+    border: 2px solid var(--soft);
+    border-radius: 12px;
+    overflow: hidden;
+    background: #fff;
+    break-inside: avoid;
+    page-break-inside: avoid;
+    cursor: grab;
+    box-shadow: 0 0 0 4px #f6f9ff inset
+}
+
+.photo:active {
+    cursor: grabbing
+}
+
+.photo::before {
+    content: "";
+    display: block;
+    aspect-ratio: 4/3;
+}
+
+.photo>img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover
+}
+
+.drag-over {
+    outline: 3px dashed #2563eb;
+    outline-offset: -6px
+}
+
+
+/* basurero de imagenes */
+
+.mgt-remove {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    border: 1px solid #cfe0ff;
+    background: #fff;
+    color: #1f3a93;
+    font-size: .8rem;
+    line-height: 1;
+    padding: 4px 8px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .08);
+}
+
+.mgt-remove:hover {
+    background: #eef3ff;
+}
+
+@media print {
+    .toolbar {
+        display: none;
+    }
+    .photo:nth-child(6n+7),
+    .photo:nth-child(6n+8) {
+        margin-top: 35mm;
+    }
+    /* 1) Encabezado fijo (se copia en cada página) */
+    header.header {
+        position: fixed !important;
+        top: 5mm !important;
+        /* ← con unidad */
+        left: 0;
+        right: 0;
+        z-index: 1000;
+        background: #fff;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .sheet {
+        padding-top: 100px;
+    }
+    #sec-resultados {
+        padding-top: 120px;
+    }
+    .header-rule {
+        position: fixed !important;
+        width: 120mm;
+        top: 100px !important;
+        left: 55mm;
+        z-index: 1000;
+        margin: 0 auto;
+        border-top: 3.5px solid #aebcd6;
+        opacity: 0.9;
+    }
+    .mgt-remove {
+        display: none;
+    }
+    #sec-fotos {
+        padding-top: 120px;
+    }
+    .btnPick {
+        display: none;
+    }
+    .group+.group {
+        page-break-before: always;
+        break-before: page;
+        padding-top: 80px;
+    }
+    #report-no {
+        top: 5mm;
+    }
+    thead th {
+        background: var(--head);
+        color: #fff;
+        text-align: left;
+        padding: 10px 8px;
+        font-weight: 700;
+    }
+}
